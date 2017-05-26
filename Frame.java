@@ -24,23 +24,23 @@ public class Frame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
     
-    //class ³ª´©°í½ÍÀ½
+    //class ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     private void MenuBar() {
 
     	JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		JMenu menuFile = new JMenu("¿­±â");
-		JMenuItem fileOpen = new JMenuItem("¿­±â");
-		JMenuItem fileMake = new JMenuItem("»õ·Î ¸¸µé±â");
+		JMenu menuFile = new JMenu("ì—´ê¸°");
+		JMenuItem fileOpen = new JMenuItem("ì—´ê¸°");
+		JMenuItem fileMake = new JMenuItem("ìƒˆë¡œ ë§Œë“¤ê¸°");
 
-		JMenu menuSave = new JMenu("ÀúÀå");
-		JMenuItem saveFile = new JMenuItem("ÀúÀå");
-		JMenuItem saveName = new JMenuItem("´Ù¸¥ ÀÌ¸§À¸·Î ÀúÀå");
+		JMenu menuSave = new JMenu("ì €ì¥");
+		JMenuItem saveFile = new JMenuItem("ì €ì¥");
+		JMenuItem saveName = new JMenuItem("ë‹¤ë¥¸ ì´ë¦„ìœ¼ë¡œ ì €ì¥");
 
-		JMenu JavaMake = new JMenu("java ÆÄÀÏ »ı¼º");
+		JMenu JavaMake = new JMenu("java íŒŒì¼ ìƒì„±");
 		
-		JMenu exitBuilder = new JMenu("´İ±â");
+		JMenu exitBuilder = new JMenu("ë‹«ê¸°");
 		
 		menuFile.add(fileOpen);
 		menuFile.add(fileMake);
@@ -51,18 +51,18 @@ public class Frame extends JFrame {
 		menuBar.add(menuFile);
 		menuBar.add(menuSave);
 		menuBar.add(JavaMake);
-		menuBar.add(Box.createHorizontalGlue()); // ´İ±â¸¦ ¸Ç ¿À¸¥ÂÊÀ¸·Î
+		menuBar.add(Box.createHorizontalGlue()); // ï¿½İ±â¸¦ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		menuBar.add(exitBuilder);
     }
     
-    // class ³ª´©°í½ÍÀ½
+    // class ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     private void ToolBar() {
     	
         JToolBar toolbar = new JToolBar();
 
         ImageIcon originIcon1 = new ImageIcon("src/new.png");
         
-        //ÀÌ¹ÌÁö Å©±â¸¦ ¸ÂÃß±â À§ÇØ
+        //ï¿½Ì¹ï¿½ï¿½ï¿½ Å©ï¿½â¸¦ ï¿½ï¿½ï¿½ß±ï¿½ ï¿½ï¿½ï¿½ï¿½
         Image originImg1 = originIcon1.getImage();
         Image changedImg1 = originImg1.getScaledInstance(10, 10, 10);
         ImageIcon icon1 = new ImageIcon(changedImg1);
@@ -104,7 +104,7 @@ public class Frame extends JFrame {
         JButton exitButton = new JButton(icon6);
         toolbar.add(exitButton);
         
-        //toolbar.addSeparator(); ¼± ³Ö´Â ÇÔ¼ö¶ó°í´Â ÇÏ´Âµ¥ »ç¿ë¹ı Àß ¸ğ¸£°ÚÀ½
+        //toolbar.addSeparator(); ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´Âµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ğ¸£°ï¿½ï¿½ï¿½
 
         add(toolbar, BorderLayout.NORTH);
     }
