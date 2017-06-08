@@ -1,4 +1,4 @@
-package swing;
+package testGUI;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -36,26 +36,28 @@ import javax.swing.JList;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
+import java.util.Random;
 import java.util.Vector;
 
-import javax.swing.JLayeredPane;
 import javax.swing.JScrollBar;
+
 public class TestGUI extends JFrame {
+	private ComponentStruct nodeList = null;
+	private DefaultMutableTreeNode whatNode = null;
+	private Object nodeInfo = null;
 	private boolean addComponentMode = false;
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private final JSplitPane splitPane_2 = new JSplitPane();
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					TestGUI frame = new TestGUI();
+					CreateMenuBar menubar = new CreateMenuBar(frame);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -66,6 +68,8 @@ public class TestGUI extends JFrame {
 
 	// 생성자
 	public TestGUI() {
+		nodeList = new ComponentStruct();
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setName("GUI Builder");
 		setBounds(100, 100, 980, 640);
@@ -75,9 +79,6 @@ public class TestGUI extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 
-		JToolBar toolBar = new JToolBar();
-		contentPane.add(toolBar, BorderLayout.NORTH);
-
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setResizeWeight(0.2);
 		contentPane.add(splitPane, BorderLayout.CENTER);
@@ -86,7 +87,7 @@ public class TestGUI extends JFrame {
 		splitPane_1.setResizeWeight(0.386);
 		splitPane_1.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		splitPane.setLeftComponent(splitPane_1);
-              
+
 		/*
 		 * Component Pane
 		 * 
@@ -105,12 +106,17 @@ public class TestGUI extends JFrame {
 		JTree tree = (new MyJTree().returnJTree());
 		tree.setBorder(BorderFactory.createTitledBorder("Components"));
 		tree.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent arg0) {
+			public void mousePressed(MouseEvent arg0) {
 				// Double Clicked
 				if (arg0.getClickCount() == 2) {
-					System.out.println("Double Clicked");
-					setCursor(Cursor.CROSSHAIR_CURSOR);
-					addComponentMode = true;
+					whatNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+					nodeInfo = whatNode.getUserObject();
+					// String 캐스트 해서 쓰숑
+					System.out.println((String) nodeInfo);
+					if ((String) nodeInfo != "User Interface" && (String) nodeInfo != "Palete") {
+						setCursor(Cursor.CROSSHAIR_CURSOR);
+						addComponentMode = true;
+					}
 				}
 			}
 		});
@@ -135,19 +141,18 @@ public class TestGUI extends JFrame {
 		 */
 		EditPane editPane = new EditPane();
 		editPane.setBorder(BorderFactory.createTitledBorder("Edit Pane"));
-		splitPane_2.setLeftComponent(editPane);
+		splitPane.setRightComponent(editPane);
+
+		JToolBar toolBar = new JToolBar();
+		contentPane.add(toolBar, BorderLayout.NORTH);
 
 		editPane.setLayout(null);
 		JScrollBar scrollBar = new JScrollBar();
 		tree.add(scrollBar, BorderLayout.EAST);
-		splitPane_2.setResizeWeight(0.7);
-		splitPane.setRightComponent(splitPane_2);
-
-		JList list = new JList();
-		splitPane_2.setRightComponent(list);
 
 	} // End of main function
 
+	@SuppressWarnings("deprecation")
 	public void setCursor(int offset) {
 		super.setCursor(offset);
 	}
@@ -157,16 +162,11 @@ public class TestGUI extends JFrame {
 	 * 컴포넌트를 끌어서(또는 그냥 클릭해서) 가시적으로 새로운 컴포넌트를 생성했다는 표현을 제공한다.
 	 */
 	private class EditPane extends JPanel {
+		private static final long serialVersionUID = 1L;
 		// 그냥 클릭시 생성될 기본 컴포넌트의 크기
-		private final static int DEFAULT_X = 30;
+		private final static int DEFAULT_X = 70;
 		private final static int DEFAULT_Y = 50;
-		Graphics objectComponent;
 		Point startPoint, lastPoint;
-		
-		// box 정보 
-		Rectangle box = new Rectangle();
-		int offX, offY;
-		boolean isDragged;
 
 		public EditPane() {
 			MouseHandler handle = new MouseHandler();
@@ -175,77 +175,110 @@ public class TestGUI extends JFrame {
 		}
 
 		/*
-		 * Vector<Point> 는 한 오브젝트만 넣을 것이 아니기 때문에 미리 저장해 두고 계속해서 컴포넌트들을 받아와 그릴 수
-		 * 있게 만들었다.
+		 * 이제 Vector를 버리고 내가 만든 nodeList를 활용을 해보자. 사실 이전에는 걍 시작포인트랑 끝포인트만 필요했지만
+		 * 지금은 색까지 넣어야 하느라 아예 내용을 통째로 담고있는 링크드 리스트 로 옮겨야 한다.
 		 */
-		Vector<Point> startPointList = new Vector<Point>();
-		Vector<Point> lastPointList = new Vector<Point>();
-
 		public void paintComponent(Graphics g) {
 			// 부모의 paintComponent를 호출 (in JPanel)
 			super.paintComponent(g);
-			g.setColor(Color.BLUE);
 
-			if (startPointList.size() >1) {
-				for (int i = 0; i < lastPointList.size(); i++) {
-					Point start = startPointList.get(i);
-					Point last = lastPointList.get(i);
-					g.drawRect(start.x, start.y, last.x - start.x, last.y - start.y);
-					//g.drawRect(box.x,box.y,box.width,box.height);
+			if (nodeList.getSize() != 0) {
+				for (int i = 0; i < nodeList.getSize(); i++) {
+					CompNode cmp = nodeList.get(i);
+					Point start = cmp.startPoint;
+					Point last = cmp.lastPoint;
+					g.setColor(cmp.compColor);
+					g.fillRect(start.x, start.y, last.x - start.x, last.y - start.y);
 				}
 			}
-			if (startPoint != null)
-if(addComponentMode == true)g.drawRect(startPoint.x, startPoint.y, lastPoint.x - startPoint.x, lastPoint.y - startPoint.y);
-else	g.drawRect(box.x,box.y,box.width,box.height);
+			// drawRect로 드래그시 사각형이 그려지는 효과
+			if (addComponentMode) {
+				if (nodeList.getSize() == 0) {
+				}
+				g.setColor(Color.BLACK);
+				g.drawRect(startPoint.x, startPoint.y, lastPoint.x - startPoint.x, lastPoint.y - startPoint.y);
+			}
 		}
 
 		// 드래그 초기설정
 		private class MouseHandler implements MouseListener, MouseMotionListener {
-			
-			
-             public void mousePressed(MouseEvent e) {
-				if (addComponentMode == true) {
-					System.out.println("pressed");
-					startPoint = e.getPoint();
-					box.x = startPoint.x;
-					
-					box.y = startPoint.y;
-					startPointList.add(startPoint);
-				}
-				else if(box.contains(new Point(e.getX(),e.getY()))){
-					//#1 마우스 버튼 누름
-					//사각형내 마우스 클릭 상대 좌표를 구함
-					//현재 마우스 스크린 좌표에서 사각형 위치 좌표의 차이를 구함
-				System.out.println(" 내부박스클릭 ");
-					offX = e.getX() - box.x;
-					offY = e.getY() - box.y;
-				
-					//드래그 시작을 표시
-					isDragged = true;
+			CompNode newNode;
+			Rectangle tempBox = null;
+			int tempStartX, tempStartY;
+			int tempLengthX, tempLengthY;
+			int top = -1;
+			int offX, offY;
 
-				}
-			}
+			public void mousePressed(MouseEvent e) {
+				if (addComponentMode) {
+					startPoint = e.getPoint();
+				} else {
+					/*
+					 * 클릭했을 때 겹치는 컴포넌트 중에서 가장 위에 올라와 있는 놈을 호출한다 제일 먼저 각 노드들의
+					 * startPoint와 lastPoint를 가져와 rectangle을 하나 만든 다음,
+					 * contains(int x, int y, int width, int height) 메소드 를 사용하여
+					 * 클릭여부를 확인한다.
+					 */
+					if (nodeList.getSize() != 0) {
+						top = -1;
+						for (int i = 0; i < nodeList.getSize(); i++) {
+							CompNode cmp = nodeList.get(i);
+							tempStartX = cmp.startPoint.x;
+							tempStartY = cmp.startPoint.y;
+							tempLengthX = cmp.lastPoint.x - tempStartX;
+							tempLengthY = cmp.lastPoint.y - tempStartY;
+
+							tempBox = new Rectangle(tempStartX, tempStartY, tempLengthX, tempLengthY);
+							if (tempBox.contains(e.getX(), e.getY())) {
+								top = i;
+							}
+
+						} // end of for-loop for checking the biggest
+							// node which contains mouse axis
+
+						if (top >= 0) {
+							System.out.println("You have selected " + nodeList.get(top).compType);
+							CompNode topNode = nodeList.get(top);
+							offX = e.getX() - topNode.startPoint.x;
+							offY = e.getY() - topNode.startPoint.y;
+							/*
+							 * 그리고, 드래그된 컴포넌트는 노드의 제일 앞으로 오게 설정하고 싶다.
+							 */
+							nodeList.moveToLast(top);
+							top = nodeList.getSize() - 1;
+						}
+					} // end of if, when nodeList's size is not zero
+					repaint();
+				} // end of else, when addComponentMode is false
+			} // end of mousePressed()
 
 			public void mouseDragged(MouseEvent e) {
-				if (addComponentMode == true) {
+				if (addComponentMode) {
 					lastPoint = e.getPoint();
-					repaint();
-				}
-				if(isDragged){
-					
-					box.x = e.getX() - offX;
-					box.y = e.getY() - offY;
+				} else {
+					/*
+					 * 만약에 top(현재 클릭한 컴포넌트 중 가장 높이 있는놈) 가 0이상, 즉 마우스가 클릭이 된 상태에서
+					 * 잡힌 컴포넌트가 있다면 드래그시 따라 움직이도록 만들어야 한다.
+					 */
+					if (top >= 0) {
+						CompNode topNode = nodeList.get(top);
+						topNode.startPoint.x = e.getX() - offX;
+						topNode.startPoint.y = e.getY() - offY;
+						topNode.lastPoint.x = topNode.startPoint.x + topNode.xLength;
+						topNode.lastPoint.y = topNode.startPoint.y + topNode.yLength;
 
+					}
 				}
 				repaint();
-			
 			}
 
+			@SuppressWarnings("deprecation")
 			public void mouseReleased(MouseEvent e) {
-				if (addComponentMode == true) {
+				Random colorRandom = new Random();
+				Color randColor = new Color(colorRandom.nextInt(255), colorRandom.nextInt(255),
+						colorRandom.nextInt(255));
+				if (addComponentMode) {
 					lastPoint = e.getPoint();
-				    box.width = lastPoint.x - startPoint.x;
-					box.height = lastPoint.y - startPoint.y;
 					// 단순 클릭일 경우, default size를 더해주어 컴포넌트를 만든다.
 					if (startPoint.x == lastPoint.x && startPoint.y == lastPoint.y) {
 						startPoint = e.getPoint();
@@ -253,15 +286,63 @@ else	g.drawRect(box.x,box.y,box.width,box.height);
 					} else {
 						lastPoint = e.getPoint();
 					}
-					lastPointList.add(lastPoint);
 					TestGUI.super.setCursor(Cursor.DEFAULT_CURSOR);
 					repaint();
+
+					/*
+					 * 현 컴포넌트를 얻어오고(저기 위에 nodeInfo 라는 놈에게 심어놓았다.)
+					 * ComponentStruct 링크드 리스트에다가 쑤셔넣는다.
+					 */
+					newNode = new CompNode();
+					newNode.startPoint = startPoint;
+					newNode.lastPoint = lastPoint;
+					newNode.xLength = lastPoint.x - startPoint.x;
+					newNode.yLength = lastPoint.y - startPoint.y;
+					newNode.compText = null;
+					newNode.compTextAttr = null;
+					newNode.compColor = randColor;
+
+					switch ((String) nodeInfo) {
+					case ("Button"):
+						System.out.println("hi Button");
+						newNode.compType = ComponentStruct.COMP_BUTTON;
+						break;
+					case ("Check Box"):
+						System.out.println("hi Check Box");
+						newNode.compType = ComponentStruct.COMP_CHECK_BOX;
+						break;
+					case ("Label"):
+						System.out.println("hi Label");
+						newNode.compType = ComponentStruct.COMP_LABEL;
+						break;
+					case ("Text Box"):
+						System.out.println("hi Text Box");
+						newNode.compType = ComponentStruct.COMP_TEXT_BOX;
+						break;
+					case ("Combo Box"):
+						System.out.println("hi Combo Box");
+						newNode.compType = ComponentStruct.COMP_COMBO_BOX;
+						break;
+
+					} // end of switch
+
+					// Linked List에다가 집어넣기
+					nodeList.add(newNode);
+					System.out.println(nodeList.getSize());
+
 				} // end of addComponentMode checking
 
 				// 이제 다시 addComponentMode를 원래대로 돌려놓고 마우스를 default 모양으로 바꿔야지
 				addComponentMode = false;
 
-			} // end of mouseReleased
+				// top 를 -1로 다시 내려놓아야
+				top = -1;
+
+				// startPoint, lastPoint 초기화
+				startPoint = null;
+				lastPoint = null;
+
+			} // end of mouseReleased method
 
 			public void mouseMoved(MouseEvent e) {
 			}
@@ -274,7 +355,8 @@ else	g.drawRect(box.x,box.y,box.width,box.height);
 
 			public void mouseExited(MouseEvent e) {
 			}
-		}
+		} // end of inner class MouseHandler
 
-	}
-}
+	} // end of Class EditPane
+
+} // end of public class TestGUI
