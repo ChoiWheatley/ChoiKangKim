@@ -59,9 +59,7 @@ public class TestGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtX;
-	private JTextField txtY;
 	private JTextField textField;
-	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField textField_3;
 	private JTextField textField_4;
@@ -100,6 +98,7 @@ public class TestGUI extends JFrame {
 
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setContinuousLayout(true);
+		splitPane.setDividerLocation(5);
 		contentPane.add(splitPane, BorderLayout.CENTER);
 
 		JSplitPane splitPane_1 = new JSplitPane();
@@ -163,7 +162,7 @@ public class TestGUI extends JFrame {
 		panel.add(panel_2);
 		panel_2.setLayout(new GridLayout(1, 2));
 		
-		JLabel lblStartpoint = new JLabel("startPoint");
+		JLabel lblStartpoint = new JLabel("startX");
 		panel_2.add(lblStartpoint);
 		
 		JPanel panel_1 = new JPanel();
@@ -177,17 +176,12 @@ public class TestGUI extends JFrame {
 		txtX.setText("x");
 		txtX.setColumns(10);
 		
-		txtY = new JTextField();
-		txtY.setText("y");
-		panel_1.add(txtY);
-		txtY.setColumns(10);
-		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBackground(new Color(127, 255, 212));
 		panel.add(panel_3);
 		panel_3.setLayout(new GridLayout(1, 2));
 		
-		JLabel lblLastpoint = new JLabel("lastPoint");
+		JLabel lblLastpoint = new JLabel("startY");
 		panel_3.add(lblLastpoint);
 		
 		JPanel panel_4 = new JPanel();
@@ -201,11 +195,6 @@ public class TestGUI extends JFrame {
 		textField.setColumns(10);
 		panel_4.add(textField);
 		
-		textField_1 = new JTextField();
-		textField_1.setText("y");
-		textField_1.setColumns(10);
-		panel_4.add(textField_1);
-		
 		JPanel panel_5 = new JPanel();
 		panel_5.setBackground(new Color(224, 255, 255));
 		panel.add(panel_5);
@@ -216,7 +205,7 @@ public class TestGUI extends JFrame {
 		
 		textField_2 = new JTextField();
 		panel_5.add(textField_2);
-		textField_2.setColumns(10);
+		textField_2.setColumns(1);
 		
 		JPanel panel_6 = new JPanel();
 		panel_6.setBackground(new Color(127, 255, 212));
@@ -341,10 +330,10 @@ public class TestGUI extends JFrame {
 			if (nodeList.getSize() != 0) {
 				for (int i = 0; i < nodeList.getSize(); i++) {
 					CompNode cmp = nodeList.get(i);
-					Point start = cmp.startPoint;
-					Point last = cmp.lastPoint;
+					int startX = cmp.startX;
+					int startY = cmp.startY;
 					g.setColor(cmp.compColor);
-					g.fillRect(start.x, start.y, last.x - start.x, last.y - start.y);
+					g.fillRect(startX, startY, cmp.xLength, cmp.yLength);
 				}
 			}
 			// drawRect로 드래그시 사각형이 그려지는 효과
@@ -379,10 +368,10 @@ public class TestGUI extends JFrame {
 						top = -1;
 						for (int i = 0; i < nodeList.getSize(); i++) {
 							CompNode cmp = nodeList.get(i);
-							tempStartX = cmp.startPoint.x;
-							tempStartY = cmp.startPoint.y;
-							tempLengthX = cmp.lastPoint.x - tempStartX;
-							tempLengthY = cmp.lastPoint.y - tempStartY;
+							tempStartX = cmp.startX;
+							tempStartY = cmp.startY;
+							tempLengthX = cmp.xLength;
+							tempLengthY = cmp.yLength;
 
 							tempBox = new Rectangle(tempStartX, tempStartY, tempLengthX, tempLengthY);
 							if (tempBox.contains(e.getX(), e.getY())) {
@@ -395,8 +384,8 @@ public class TestGUI extends JFrame {
 						if (top >= 0) {
 							System.out.println("You have selected " + nodeList.get(top).compType);
 							CompNode topNode = nodeList.get(top);
-							offX = e.getX() - topNode.startPoint.x;
-							offY = e.getY() - topNode.startPoint.y;
+							offX = e.getX() - topNode.startX;
+							offY = e.getY() - topNode.startY;
 							/*
 							 * 그리고, 드래그된 컴포넌트는 노드의 제일 앞으로 오게 설정하고 싶다.
 							 */
@@ -418,11 +407,8 @@ public class TestGUI extends JFrame {
 					 */
 					if (top >= 0) {
 						CompNode topNode = nodeList.get(top);
-						topNode.startPoint.x = e.getX() - offX;
-						topNode.startPoint.y = e.getY() - offY;
-						topNode.lastPoint.x = topNode.startPoint.x + topNode.xLength;
-						topNode.lastPoint.y = topNode.startPoint.y + topNode.yLength;
-
+						topNode.startX = e.getX() - offX;
+						topNode.startY = e.getY() - offY;
 					}
 				}
 				repaint();
@@ -450,8 +436,8 @@ public class TestGUI extends JFrame {
 					 * ComponentStruct 링크드 리스트에다가 쑤셔넣는다.
 					 */
 					newNode = new CompNode();
-					newNode.startPoint = startPoint;
-					newNode.lastPoint = lastPoint;
+					newNode.startX= startPoint.x;
+					newNode.startY= startPoint.y;
 					newNode.xLength = lastPoint.x - startPoint.x;
 					newNode.yLength = lastPoint.y - startPoint.y;
 					newNode.name = null;
@@ -514,5 +500,4 @@ public class TestGUI extends JFrame {
 		} // end of inner class MouseHandler
 
 	} // end of Class EditPane
-
 } // end of public class TestGUI
