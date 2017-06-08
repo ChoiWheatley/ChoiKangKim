@@ -152,132 +152,133 @@ public class TestGUI extends JFrame {
 			}
 		});
 		splitPane_1.setLeftComponent(tree);
-		
+
 		JPanel panel = new JPanel();
 		splitPane_1.setRightComponent(panel);
 		panel.setLayout(new GridLayout(8, 2));
-		
+
 		JPanel panel_2 = new JPanel();
 		panel_2.setBackground(new Color(224, 255, 255));
 		panel.add(panel_2);
 		panel_2.setLayout(new GridLayout(1, 2));
-		
+
 		JLabel lblStartpoint = new JLabel("startX");
 		panel_2.add(lblStartpoint);
-		
+
 		JPanel panel_1 = new JPanel();
 		panel_2.add(panel_1);
 		panel_1.setBackground(Color.WHITE);
 		panel_1.setForeground(Color.WHITE);
 		panel_1.setLayout(new GridLayout(1, 2));
-		
+
 		txtX = new JTextField();
 		panel_1.add(txtX);
 		txtX.setText("x");
 		txtX.setColumns(10);
-		
+
 		JPanel panel_3 = new JPanel();
 		panel_3.setBackground(new Color(127, 255, 212));
 		panel.add(panel_3);
 		panel_3.setLayout(new GridLayout(1, 2));
-		
+
 		JLabel lblLastpoint = new JLabel("startY");
 		panel_3.add(lblLastpoint);
-		
+
 		JPanel panel_4 = new JPanel();
 		panel_4.setForeground(Color.WHITE);
 		panel_4.setBackground(Color.WHITE);
 		panel_3.add(panel_4);
 		panel_4.setLayout(new GridLayout(1, 2));
-		
+
 		textField = new JTextField();
 		textField.setText("x");
 		textField.setColumns(10);
 		panel_4.add(textField);
-		
+
 		JPanel panel_5 = new JPanel();
 		panel_5.setBackground(new Color(224, 255, 255));
 		panel.add(panel_5);
 		panel_5.setLayout(new GridLayout(1, 2));
-		
+
 		JLabel lblXlength = new JLabel("xLength");
 		panel_5.add(lblXlength);
-		
+
 		textField_2 = new JTextField();
 		panel_5.add(textField_2);
 		textField_2.setColumns(1);
-		
+
 		JPanel panel_6 = new JPanel();
 		panel_6.setBackground(new Color(127, 255, 212));
 		panel.add(panel_6);
 		panel_6.setLayout(new GridLayout(1, 2));
-		
+
 		JLabel lblYlength = new JLabel("yLength");
 		panel_6.add(lblYlength);
-		
+
 		textField_3 = new JTextField();
 		panel_6.add(textField_3);
 		textField_3.setText("x");
 		textField_3.setColumns(10);
-		
+
 		JPanel panel_7 = new JPanel();
 		panel_7.setBackground(new Color(224, 255, 255));
 		panel.add(panel_7);
 		panel_7.setLayout(new GridLayout(1, 2));
-		
+
 		JLabel lblComptype = new JLabel("compType");
 		lblComptype.setBackground(new Color(127, 255, 212));
 		panel_7.add(lblComptype);
-		
+
 		JComboBox comboBox = new JComboBox();
 		comboBox.setBackground(new Color(248, 248, 255));
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"COMP_BUTTON", "COMP_CHECK_BOX", "COMP_LABEL", "COMP_TEXT_BOX", "COMP_COMBO_BOX"}));
+		comboBox.setModel(new DefaultComboBoxModel(
+				new String[] { "COMP_BUTTON", "COMP_CHECK_BOX", "COMP_LABEL", "COMP_TEXT_BOX", "COMP_COMBO_BOX" }));
 		panel_7.add(comboBox);
-		
+
 		JPanel panel_8 = new JPanel();
 		panel_8.setBackground(new Color(127, 255, 212));
 		panel.add(panel_8);
 		panel_8.setLayout(new GridLayout(1, 2));
-		
+
 		JLabel lblName = new JLabel("name");
 		panel_8.add(lblName);
-		
+
 		textField_4 = new JTextField();
 		textField_4.setText("x");
 		textField_4.setColumns(10);
 		panel_8.add(textField_4);
-		
+
 		JPanel panel_9 = new JPanel();
 		panel_9.setBackground(new Color(224, 255, 255));
 		panel.add(panel_9);
 		panel_9.setLayout(new GridLayout(1, 2));
-		
+
 		JLabel lblCompcolor = new JLabel("compColor");
 		panel_9.add(lblCompcolor);
-		
+
 		txtR = new JTextField();
 		txtR.setText("r");
 		txtR.setColumns(10);
 		panel_9.add(txtR);
-		
+
 		txtG = new JTextField();
 		txtG.setText("g");
 		panel_9.add(txtG);
 		txtG.setColumns(10);
-		
+
 		txtB = new JTextField();
 		txtB.setText("b");
 		panel_9.add(txtB);
 		txtB.setColumns(10);
-		
+
 		JPanel panel_10 = new JPanel();
 		panel_10.setBackground(new Color(127, 255, 212));
 		panel.add(panel_10);
 		panel_10.setLayout(new GridLayout(1, 2));
-		
+
 		JLabel lblComptextattr = new JLabel("compTextAttr");
 		panel_10.add(lblComptextattr);
-		
+
 		textField_8 = new JTextField();
 		panel_10.add(textField_8);
 		textField_8.setColumns(10);
@@ -436,8 +437,8 @@ public class TestGUI extends JFrame {
 					 * ComponentStruct 링크드 리스트에다가 쑤셔넣는다.
 					 */
 					newNode = new CompNode();
-					newNode.startX= startPoint.x;
-					newNode.startY= startPoint.y;
+					newNode.startX = startPoint.x;
+					newNode.startY = startPoint.y;
 					newNode.xLength = lastPoint.x - startPoint.x;
 					newNode.yLength = lastPoint.y - startPoint.y;
 					newNode.name = null;
@@ -470,7 +471,7 @@ public class TestGUI extends JFrame {
 
 					// Linked List에다가 집어넣기
 					nodeList.add(newNode);
-					System.out.println(nodeList.getSize());
+					System.out.println("size : " + nodeList.getSize());
 
 				} // end of addComponentMode checking
 
