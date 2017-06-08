@@ -13,23 +13,30 @@ public class Func extends JFrame{
 
 	JSONParser parser = new JSONParser();
 	String path = new String();
-	
+	ComponentStruct nodeList = new ComponentStruct();
+
 	// 파일 열기
 	public void FileOpen(JFileChooser fileChooser) {
 		if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			File file = fileChooser.getSelectedFile();
 			try {
-				// 배열이 아닌 경우 읽어오기
 				Object obj = parser.parse(new FileReader(file.toString()));
-				JSONObject jobj = (JSONObject) obj;
-				// ex) String name = (String) jobj.get("name");
+				String data = obj.toString();
+				JSONParser parser = new JSONParser();
+				JSONObject jobj = (JSONObject) parser.parse(data);
+				JSONArray jarr = (JSONArray)jobj.get("Comp");
 
-				// 배열인 경우 읽어오기
-				JSONArray magList = (JSONArray) jobj.get("list");
-				Iterator<String>iterator = magList.iterator();
-				while (iterator.hasNext()) {
-					// 확실하지 않음 우리 배열 쓰는거 있남?
-					// ex) name = iterator.next();
+				for (int i = 0; i < jarr.size(); i++) {
+					JSONObject tmp = (JSONObject)jarr.get(i);
+					nodeList.get(i).startX = (int)tmp.get("startX");
+					nodeList.get(i).startY = (int)tmp.get("startY");
+					nodeList.get(i).xLength = (int)tmp.get("xLength");
+					nodeList.get(i).yLength = (int)tmp.get("yLength");
+					nodeList.get(i).compType = (int)tmp.get("compType");
+					nodeList.get(i).name = (String)tmp.get("name");
+					nodeList.get(i).compTextAttr = (String)tmp.get("compTextAttr");
+					nodeList.get(i).compColor = (Color)tmp.get("compColor");
+					nodeList.add(nodeList.get(i));
 				}
 			}
 			catch (FileNotFoundException e) {
@@ -51,19 +58,28 @@ public class Func extends JFrame{
 
 	// 저장
 	public void SaveFile() {
-		//if(fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
-		//File file = fileChooser.getSelectedFile();
-		// 배열이 아닌경우 저장
-		JSONObject jobj = new JSONObject();
-		// ex) jobj.put("name", "button1S");
+		JSONArray jarr = new JSONArray();
 
-		//배열인 경우 저장
-		JSONArray list = new JSONArray();
-		// ex) list.add("name?");
-		// ex) jobj.put("name", name);
-
-		try (FileWriter filewriter = new FileWriter("d:\\jsonfile/NewFile.json")) {
-			filewriter.write(jobj.toJSONString());
+		for (int i = 0; i < nodeList.getSize(); i++) {
+			JSONObject jobj = new JSONObject();
+			
+			jobj.put("startPoint", nodeList.get(i).startX);
+			jobj.put("lastPoint", nodeList.get(i).startY);
+			jobj.put("xLength", nodeList.get(i).xLength);
+			jobj.put("yLength", nodeList.get(i).yLength);
+			jobj.put("compType", nodeList.get(i).compType);
+			jobj.put("name", nodeList.get(i).name);
+			jobj.put("compTextAttr", nodeList.get(i).compTextAttr);
+			jobj.put("compColor", nodeList.get(i).compColor);
+			
+			jarr.add(jobj);
+		}
+		
+		JSONObject Comp = new JSONObject();
+		Comp.put("Comp", jarr);
+		
+		try (FileWriter filewriter = new FileWriter("c:\\jsonfile/NewFile.json")) {
+			filewriter.write(jarr.toJSONString());
 			filewriter.flush();
 		}
 		catch (IOException e) {
@@ -75,25 +91,9 @@ public class Func extends JFrame{
 	public void SaveName(JFileChooser fileChooser) {
 		if(fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
 			File file = fileChooser.getSelectedFile();
-			// 배열이 아닌경우 저장
-			JSONObject jobj = new JSONObject();
-			// ex) obj.put("name", "button1S");
-
-			//배열인 경우 저장
-			JSONArray list = new JSONArray();
-			// ex) list.add("name?");
-			// ex) jobj.put("name", name);
-
-			try (FileWriter filewriter = new FileWriter(file.toString())) {
-				filewriter.write(jobj.toJSONString());
-				filewriter.flush();
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 	}
-	
+
 	// java 파일 생성
 	public void JavaMake() {
 		// 이건 모르겠다...ㅠㅠ
