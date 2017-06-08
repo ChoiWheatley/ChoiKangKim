@@ -48,6 +48,7 @@ import java.awt.GridLayout;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.DefaultComboBoxModel;
 
 public class TestGUI extends JFrame {
@@ -58,15 +59,15 @@ public class TestGUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField txtX;
-	private JTextField textField;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField txtR;
-	private JTextField txtG;
-	private JTextField txtB;
-	private JTextField textField_8;
+	private JTextField startXValue;
+	private JTextField startYValue;
+	private JTextField xLengthValue;
+	private JTextField yLengthValue;
+	private JTextField nameValue;
+	private JTextField rValue;
+	private JTextField gValue;
+	private JTextField bValue;
+	private JTextField compTextAttrValue;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -153,135 +154,135 @@ public class TestGUI extends JFrame {
 		});
 		splitPane_1.setLeftComponent(tree);
 
-		JPanel panel = new JPanel();
-		splitPane_1.setRightComponent(panel);
-		panel.setLayout(new GridLayout(8, 2));
+		JPanel AttributePane = new JPanel();
+		splitPane_1.setRightComponent(AttributePane);
+		AttributePane.setLayout(new GridLayout(8, 2));
 
-		JPanel panel_2 = new JPanel();
-		panel_2.setBackground(new Color(224, 255, 255));
-		panel.add(panel_2);
-		panel_2.setLayout(new GridLayout(1, 2));
+		JPanel startXPane = new JPanel();
+		startXPane.setBackground(new Color(224, 255, 255));
+		AttributePane.add(startXPane);
+		startXPane.setLayout(new GridLayout(1, 2));
 
-		JLabel lblStartpoint = new JLabel("startX");
-		panel_2.add(lblStartpoint);
+		JLabel startX = new JLabel("startX");
+		startXPane.add(startX);
 
-		JPanel panel_1 = new JPanel();
-		panel_2.add(panel_1);
-		panel_1.setBackground(Color.WHITE);
-		panel_1.setForeground(Color.WHITE);
-		panel_1.setLayout(new GridLayout(1, 2));
+		JPanel textStartX = new JPanel();
+		startXPane.add(textStartX);
+		textStartX.setBackground(Color.WHITE);
+		textStartX.setForeground(Color.WHITE);
+		textStartX.setLayout(new GridLayout(1, 2));
 
-		txtX = new JTextField();
-		panel_1.add(txtX);
-		txtX.setText("x");
-		txtX.setColumns(10);
+		startXValue = new JTextField();
+		textStartX.add(startXValue);
+		startXValue.setText("x");
+		startXValue.setColumns(10);
 
-		JPanel panel_3 = new JPanel();
-		panel_3.setBackground(new Color(127, 255, 212));
-		panel.add(panel_3);
-		panel_3.setLayout(new GridLayout(1, 2));
+		JPanel startYPane = new JPanel();
+		startYPane.setBackground(new Color(127, 255, 212));
+		AttributePane.add(startYPane);
+		startYPane.setLayout(new GridLayout(1, 2));
 
-		JLabel lblLastpoint = new JLabel("startY");
-		panel_3.add(lblLastpoint);
+		JLabel startY = new JLabel("startY");
+		startYPane.add(startY);
 
-		JPanel panel_4 = new JPanel();
-		panel_4.setForeground(Color.WHITE);
-		panel_4.setBackground(Color.WHITE);
-		panel_3.add(panel_4);
-		panel_4.setLayout(new GridLayout(1, 2));
+		JPanel textStartY = new JPanel();
+		textStartY.setForeground(Color.WHITE);
+		textStartY.setBackground(Color.WHITE);
+		startYPane.add(textStartY);
+		textStartY.setLayout(new GridLayout(1, 2));
 
-		textField = new JTextField();
-		textField.setText("x");
-		textField.setColumns(10);
-		panel_4.add(textField);
+		startYValue = new JTextField();
+		startYValue.setText("x");
+		startYValue.setColumns(10);
+		textStartY.add(startYValue);
 
-		JPanel panel_5 = new JPanel();
-		panel_5.setBackground(new Color(224, 255, 255));
-		panel.add(panel_5);
-		panel_5.setLayout(new GridLayout(1, 2));
+		JPanel xLengthPane = new JPanel();
+		xLengthPane.setBackground(new Color(224, 255, 255));
+		AttributePane.add(xLengthPane);
+		xLengthPane.setLayout(new GridLayout(1, 2));
 
-		JLabel lblXlength = new JLabel("xLength");
-		panel_5.add(lblXlength);
+		JLabel xLength = new JLabel("xLength");
+		xLengthPane.add(xLength);
 
-		textField_2 = new JTextField();
-		panel_5.add(textField_2);
-		textField_2.setColumns(1);
+		xLengthValue = new JTextField();
+		xLengthPane.add(xLengthValue);
+		xLengthValue.setColumns(1);
 
-		JPanel panel_6 = new JPanel();
-		panel_6.setBackground(new Color(127, 255, 212));
-		panel.add(panel_6);
-		panel_6.setLayout(new GridLayout(1, 2));
+		JPanel yLengthPane = new JPanel();
+		yLengthPane.setBackground(new Color(127, 255, 212));
+		AttributePane.add(yLengthPane);
+		yLengthPane.setLayout(new GridLayout(1, 2));
 
-		JLabel lblYlength = new JLabel("yLength");
-		panel_6.add(lblYlength);
+		JLabel yLength = new JLabel("yLength");
+		yLengthPane.add(yLength);
 
-		textField_3 = new JTextField();
-		panel_6.add(textField_3);
-		textField_3.setText("x");
-		textField_3.setColumns(10);
+		yLengthValue = new JTextField();
+		yLengthPane.add(yLengthValue);
+		yLengthValue.setText("x");
+		yLengthValue.setColumns(10);
 
-		JPanel panel_7 = new JPanel();
-		panel_7.setBackground(new Color(224, 255, 255));
-		panel.add(panel_7);
-		panel_7.setLayout(new GridLayout(1, 2));
+		JPanel compTypePane = new JPanel();
+		compTypePane.setBackground(new Color(224, 255, 255));
+		AttributePane.add(compTypePane);
+		compTypePane.setLayout(new GridLayout(1, 2));
 
-		JLabel lblComptype = new JLabel("compType");
-		lblComptype.setBackground(new Color(127, 255, 212));
-		panel_7.add(lblComptype);
+		JLabel compType = new JLabel("compType");
+		compType.setBackground(new Color(127, 255, 212));
+		compTypePane.add(compType);
 
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBackground(new Color(248, 248, 255));
-		comboBox.setModel(new DefaultComboBoxModel(
+		JComboBox compTypeValue = new JComboBox();
+		compTypeValue.setBackground(new Color(248, 248, 255));
+		compTypeValue.setModel(new DefaultComboBoxModel(
 				new String[] { "COMP_BUTTON", "COMP_CHECK_BOX", "COMP_LABEL", "COMP_TEXT_BOX", "COMP_COMBO_BOX" }));
-		panel_7.add(comboBox);
+		compTypePane.add(compTypeValue);
 
-		JPanel panel_8 = new JPanel();
-		panel_8.setBackground(new Color(127, 255, 212));
-		panel.add(panel_8);
-		panel_8.setLayout(new GridLayout(1, 2));
+		JPanel namePane = new JPanel();
+		namePane.setBackground(new Color(127, 255, 212));
+		AttributePane.add(namePane);
+		namePane.setLayout(new GridLayout(1, 2));
 
-		JLabel lblName = new JLabel("name");
-		panel_8.add(lblName);
+		JLabel name = new JLabel("name");
+		namePane.add(name);
 
-		textField_4 = new JTextField();
-		textField_4.setText("x");
-		textField_4.setColumns(10);
-		panel_8.add(textField_4);
+		nameValue = new JTextField();
+		nameValue.setText("x");
+		nameValue.setColumns(10);
+		namePane.add(nameValue);
 
-		JPanel panel_9 = new JPanel();
-		panel_9.setBackground(new Color(224, 255, 255));
-		panel.add(panel_9);
-		panel_9.setLayout(new GridLayout(1, 2));
+		JPanel compColorPane = new JPanel();
+		compColorPane.setBackground(new Color(224, 255, 255));
+		AttributePane.add(compColorPane);
+		compColorPane.setLayout(new GridLayout(1, 2));
 
-		JLabel lblCompcolor = new JLabel("compColor");
-		panel_9.add(lblCompcolor);
+		JLabel compColor = new JLabel("compColor");
+		compColorPane.add(compColor);
 
-		txtR = new JTextField();
-		txtR.setText("r");
-		txtR.setColumns(10);
-		panel_9.add(txtR);
+		rValue = new JTextField();
+		rValue.setText("r");
+		rValue.setColumns(10);
+		compColorPane.add(rValue);
 
-		txtG = new JTextField();
-		txtG.setText("g");
-		panel_9.add(txtG);
-		txtG.setColumns(10);
+		gValue = new JTextField();
+		gValue.setText("g");
+		compColorPane.add(gValue);
+		gValue.setColumns(10);
 
-		txtB = new JTextField();
-		txtB.setText("b");
-		panel_9.add(txtB);
-		txtB.setColumns(10);
+		bValue = new JTextField();
+		bValue.setText("b");
+		compColorPane.add(bValue);
+		bValue.setColumns(10);
 
-		JPanel panel_10 = new JPanel();
-		panel_10.setBackground(new Color(127, 255, 212));
-		panel.add(panel_10);
-		panel_10.setLayout(new GridLayout(1, 2));
+		JPanel compTextAttributePane = new JPanel();
+		compTextAttributePane.setBackground(new Color(127, 255, 212));
+		AttributePane.add(compTextAttributePane);
+		compTextAttributePane.setLayout(new GridLayout(1, 2));
 
-		JLabel lblComptextattr = new JLabel("compTextAttr");
-		panel_10.add(lblComptextattr);
+		JLabel compTextAttr = new JLabel("compTextAttr");
+		compTextAttributePane.add(compTextAttr);
 
-		textField_8 = new JTextField();
-		panel_10.add(textField_8);
-		textField_8.setColumns(10);
+		compTextAttrValue = new JTextField();
+		compTextAttributePane.add(compTextAttrValue);
+		compTextAttrValue.setColumns(10);
 
 		/*
 		 * 에디터 패인은 addComponentMode가 true일 때에만 마우스 드래그를 허용, 드래그시 rectangular 가
@@ -313,6 +314,7 @@ public class TestGUI extends JFrame {
 		private final static int DEFAULT_X = 70;
 		private final static int DEFAULT_Y = 50;
 		Point startPoint, lastPoint;
+		boolean highlight = false;
 
 		public EditPane() {
 			MouseHandler handle = new MouseHandler();
@@ -339,10 +341,14 @@ public class TestGUI extends JFrame {
 			}
 			// drawRect로 드래그시 사각형이 그려지는 효과
 			if (addComponentMode) {
-				if (nodeList.getSize() == 0) {
-				}
 				g.setColor(Color.BLACK);
 				g.drawRect(startPoint.x, startPoint.y, lastPoint.x - startPoint.x, lastPoint.y - startPoint.y);
+			}
+			//highlight 효과를 컴포넌트에게 전달하는 부분
+			if (highlight){
+				CompNode topNode = nodeList.get(nodeList.getSize()-1);
+				g.setColor(Color.RED);
+				g.drawRect(topNode.startX-2, topNode.startY-2, topNode.xLength+3, topNode.yLength+3);
 			}
 		}
 
@@ -392,7 +398,13 @@ public class TestGUI extends JFrame {
 							 */
 							nodeList.moveToLast(top);
 							top = nodeList.getSize() - 1;
-						}
+							highlight = true;
+							/*
+							 * 앞으로 나온 컴포넌트 가 활성화되었다는 것을 보여주기 위해 상자를 하나 더 그려주자.
+							 * 어차피 이놈은 하나만 그리면 된다.
+							 * 
+							 */
+						} // end of if, when top is bigger than zero.
 					} // end of if, when nodeList's size is not zero
 					repaint();
 				} // end of else, when addComponentMode is false
@@ -484,6 +496,9 @@ public class TestGUI extends JFrame {
 				// startPoint, lastPoint 초기화
 				startPoint = null;
 				lastPoint = null;
+				
+				//highlight 초기화
+				highlight = false;
 
 			} // end of mouseReleased method
 
