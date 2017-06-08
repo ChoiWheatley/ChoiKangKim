@@ -42,6 +42,13 @@ import java.util.Random;
 import java.util.Vector;
 
 import javax.swing.JScrollBar;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import java.awt.GridLayout;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class TestGUI extends JFrame {
 	private ComponentStruct nodeList = null;
@@ -51,6 +58,17 @@ public class TestGUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JTextField txtX;
+	private JTextField txtY;
+	private JTextField textField;
+	private JTextField textField_1;
+	private JTextField textField_2;
+	private JTextField textField_3;
+	private JTextField textField_4;
+	private JTextField txtR;
+	private JTextField txtG;
+	private JTextField txtB;
+	private JTextField textField_8;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -58,6 +76,7 @@ public class TestGUI extends JFrame {
 				try {
 					TestGUI frame = new TestGUI();
 					CreateMenuBar menubar = new CreateMenuBar(frame);
+					CreateToolBar toolbar = new CreateToolBar(frame);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -80,10 +99,11 @@ public class TestGUI extends JFrame {
 		setContentPane(contentPane);
 
 		JSplitPane splitPane = new JSplitPane();
-		splitPane.setResizeWeight(0.2);
+		splitPane.setContinuousLayout(true);
 		contentPane.add(splitPane, BorderLayout.CENTER);
 
 		JSplitPane splitPane_1 = new JSplitPane();
+		splitPane_1.setContinuousLayout(true);
 		splitPane_1.setResizeWeight(0.386);
 		splitPane_1.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		splitPane.setLeftComponent(splitPane_1);
@@ -133,6 +153,145 @@ public class TestGUI extends JFrame {
 			}
 		});
 		splitPane_1.setLeftComponent(tree);
+		
+		JPanel panel = new JPanel();
+		splitPane_1.setRightComponent(panel);
+		panel.setLayout(new GridLayout(8, 2));
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBackground(new Color(224, 255, 255));
+		panel.add(panel_2);
+		panel_2.setLayout(new GridLayout(1, 2));
+		
+		JLabel lblStartpoint = new JLabel("startPoint");
+		panel_2.add(lblStartpoint);
+		
+		JPanel panel_1 = new JPanel();
+		panel_2.add(panel_1);
+		panel_1.setBackground(Color.WHITE);
+		panel_1.setForeground(Color.WHITE);
+		panel_1.setLayout(new GridLayout(1, 2));
+		
+		txtX = new JTextField();
+		panel_1.add(txtX);
+		txtX.setText("x");
+		txtX.setColumns(10);
+		
+		txtY = new JTextField();
+		txtY.setText("y");
+		panel_1.add(txtY);
+		txtY.setColumns(10);
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setBackground(new Color(127, 255, 212));
+		panel.add(panel_3);
+		panel_3.setLayout(new GridLayout(1, 2));
+		
+		JLabel lblLastpoint = new JLabel("lastPoint");
+		panel_3.add(lblLastpoint);
+		
+		JPanel panel_4 = new JPanel();
+		panel_4.setForeground(Color.WHITE);
+		panel_4.setBackground(Color.WHITE);
+		panel_3.add(panel_4);
+		panel_4.setLayout(new GridLayout(1, 2));
+		
+		textField = new JTextField();
+		textField.setText("x");
+		textField.setColumns(10);
+		panel_4.add(textField);
+		
+		textField_1 = new JTextField();
+		textField_1.setText("y");
+		textField_1.setColumns(10);
+		panel_4.add(textField_1);
+		
+		JPanel panel_5 = new JPanel();
+		panel_5.setBackground(new Color(224, 255, 255));
+		panel.add(panel_5);
+		panel_5.setLayout(new GridLayout(1, 2));
+		
+		JLabel lblXlength = new JLabel("xLength");
+		panel_5.add(lblXlength);
+		
+		textField_2 = new JTextField();
+		panel_5.add(textField_2);
+		textField_2.setColumns(10);
+		
+		JPanel panel_6 = new JPanel();
+		panel_6.setBackground(new Color(127, 255, 212));
+		panel.add(panel_6);
+		panel_6.setLayout(new GridLayout(1, 2));
+		
+		JLabel lblYlength = new JLabel("yLength");
+		panel_6.add(lblYlength);
+		
+		textField_3 = new JTextField();
+		panel_6.add(textField_3);
+		textField_3.setText("x");
+		textField_3.setColumns(10);
+		
+		JPanel panel_7 = new JPanel();
+		panel_7.setBackground(new Color(224, 255, 255));
+		panel.add(panel_7);
+		panel_7.setLayout(new GridLayout(1, 2));
+		
+		JLabel lblComptype = new JLabel("compType");
+		lblComptype.setBackground(new Color(127, 255, 212));
+		panel_7.add(lblComptype);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBackground(new Color(248, 248, 255));
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"COMP_BUTTON", "COMP_CHECK_BOX", "COMP_LABEL", "COMP_TEXT_BOX", "COMP_COMBO_BOX"}));
+		panel_7.add(comboBox);
+		
+		JPanel panel_8 = new JPanel();
+		panel_8.setBackground(new Color(127, 255, 212));
+		panel.add(panel_8);
+		panel_8.setLayout(new GridLayout(1, 2));
+		
+		JLabel lblName = new JLabel("name");
+		panel_8.add(lblName);
+		
+		textField_4 = new JTextField();
+		textField_4.setText("x");
+		textField_4.setColumns(10);
+		panel_8.add(textField_4);
+		
+		JPanel panel_9 = new JPanel();
+		panel_9.setBackground(new Color(224, 255, 255));
+		panel.add(panel_9);
+		panel_9.setLayout(new GridLayout(1, 2));
+		
+		JLabel lblCompcolor = new JLabel("compColor");
+		panel_9.add(lblCompcolor);
+		
+		txtR = new JTextField();
+		txtR.setText("r");
+		txtR.setColumns(10);
+		panel_9.add(txtR);
+		
+		txtG = new JTextField();
+		txtG.setText("g");
+		panel_9.add(txtG);
+		txtG.setColumns(10);
+		
+		txtB = new JTextField();
+		txtB.setText("b");
+		panel_9.add(txtB);
+		txtB.setColumns(10);
+		
+		JPanel panel_10 = new JPanel();
+		panel_10.setBackground(new Color(127, 255, 212));
+		panel.add(panel_10);
+		panel_10.setLayout(new GridLayout(1, 2));
+		
+		JLabel lblComptextattr = new JLabel("compTextAttr");
+		panel_10.add(lblComptextattr);
+		
+		textField_8 = new JTextField();
+		panel_10.add(textField_8);
+		textField_8.setColumns(10);
 
 		/*
 		 * 에디터 패인은 addComponentMode가 true일 때에만 마우스 드래그를 허용, 드래그시 rectangular 가
@@ -142,9 +301,6 @@ public class TestGUI extends JFrame {
 		EditPane editPane = new EditPane();
 		editPane.setBorder(BorderFactory.createTitledBorder("Edit Pane"));
 		splitPane.setRightComponent(editPane);
-
-		JToolBar toolBar = new JToolBar();
-		contentPane.add(toolBar, BorderLayout.NORTH);
 
 		editPane.setLayout(null);
 		JScrollBar scrollBar = new JScrollBar();
@@ -298,7 +454,7 @@ public class TestGUI extends JFrame {
 					newNode.lastPoint = lastPoint;
 					newNode.xLength = lastPoint.x - startPoint.x;
 					newNode.yLength = lastPoint.y - startPoint.y;
-					newNode.compText = null;
+					newNode.name = null;
 					newNode.compTextAttr = null;
 					newNode.compColor = randColor;
 
