@@ -56,9 +56,11 @@ public class TestGUI extends JFrame {
 	private DefaultMutableTreeNode whatNode = null;
 	private Object nodeInfo = null;
 	private boolean addComponentMode = false;
+	private boolean highlight = false;
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+
 	private JTextField startXValue;
 	private JTextField startYValue;
 	private JTextField xLengthValue;
@@ -68,6 +70,10 @@ public class TestGUI extends JFrame {
 	private JTextField gValue;
 	private JTextField bValue;
 	private JTextField compTextAttrValue;
+
+	private JComboBox compTypeValue;
+
+	private CompNode topNode;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -99,7 +105,7 @@ public class TestGUI extends JFrame {
 
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setContinuousLayout(true);
-		splitPane.setDividerLocation(5);
+		splitPane.setDividerLocation(100);
 		contentPane.add(splitPane, BorderLayout.CENTER);
 
 		JSplitPane splitPane_1 = new JSplitPane();
@@ -141,14 +147,21 @@ public class TestGUI extends JFrame {
 			}
 		});
 		tree.addKeyListener(new KeyAdapter() {
-			/*
-			 * esc가 눌리면(아 물론 addComponentMode 가 true일 때여야지) 커서가 다시 일반 커서로 올아오게
-			 */
 			public void keyPressed(KeyEvent e) {
+				/*
+				 * esc가 눌리면(아 물론 addComponentMode 가 true일 때여야지) 커서가 다시 일반 커서로
+				 * 올아오게
+				 */
 				if (addComponentMode && e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-					System.out.println("exit component mode");
 					addComponentMode = false;
 					setCursor(Cursor.DEFAULT_CURSOR);
+				}
+				// 활성화시 컴포넌트 제거명령
+				if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+					nodeList.sub(nodeList.getSize() - 1);
+					highlight = false;
+					repaint();
+					System.out.println("current size : " + nodeList.getSize());
 				}
 			}
 		});
@@ -230,7 +243,7 @@ public class TestGUI extends JFrame {
 		compType.setBackground(new Color(127, 255, 212));
 		compTypePane.add(compType);
 
-		JComboBox compTypeValue = new JComboBox();
+		compTypeValue = new JComboBox();
 		compTypeValue.setBackground(new Color(248, 248, 255));
 		compTypeValue.setModel(new DefaultComboBoxModel(
 				new String[] { "COMP_BUTTON", "COMP_CHECK_BOX", "COMP_LABEL", "COMP_TEXT_BOX", "COMP_COMBO_BOX" }));
@@ -297,11 +310,25 @@ public class TestGUI extends JFrame {
 		JScrollBar scrollBar = new JScrollBar();
 		tree.add(scrollBar, BorderLayout.EAST);
 
-	} // End of main function
+	} // End of Constructor of TestGUI
 
 	@SuppressWarnings("deprecation")
 	public void setCursor(int offset) {
 		super.setCursor(offset);
+	}
+
+	// AttributePane 요소들을 활성화된 컴포넌트에 따라 값을 바꾸게
+	public void setAttributePane(CompNode node) {
+		this.startXValue.setText("" + node.startX);
+		this.startYValue.setText("" + node.startY);
+		this.xLengthValue.setText("" + node.xLength);
+		this.yLengthValue.setText("" + node.yLength);
+		this.compTypeValue.setSelectedIndex(node.compType - 1);
+		this.compTextAttrValue.setText(node.compTextAttr);
+		this.nameValue.setText(node.name);
+		this.rValue.setText("" + node.compColor.getRed());
+		this.gValue.setText("" + node.compColor.getGreen());
+		this.bValue.setText("" + node.compColor.getBlue());
 	}
 
 	/*
@@ -314,7 +341,6 @@ public class TestGUI extends JFrame {
 		private final static int DEFAULT_X = 70;
 		private final static int DEFAULT_Y = 50;
 		Point startPoint, lastPoint;
-		boolean highlight = false;
 
 		public EditPane() {
 			MouseHandler handle = new MouseHandler();
@@ -344,13 +370,13 @@ public class TestGUI extends JFrame {
 				g.setColor(Color.BLACK);
 				g.drawRect(startPoint.x, startPoint.y, lastPoint.x - startPoint.x, lastPoint.y - startPoint.y);
 			}
-			//highlight 효과를 컴포넌트에게 전달하는 부분
-			if (highlight){
-				CompNode topNode = nodeList.get(nodeList.getSize()-1);
+			// highlight 효과를 컴포넌트에게 전달하는 부분
+			if (highlight) {
+				topNode = nodeList.get(nodeList.getSize() - 1);
 				g.setColor(Color.RED);
-				g.drawRect(topNode.startX-2, topNode.startY-2, topNode.xLength+3, topNode.yLength+3);
+				g.drawRect(topNode.startX - 2, topNode.startY - 2, topNode.xLength + 3, topNode.yLength + 3);
 			}
-		}
+		} // end of paintComponent
 
 		// 드래그 초기설정
 		private class MouseHandler implements MouseListener, MouseMotionListener {
@@ -389,7 +415,6 @@ public class TestGUI extends JFrame {
 							// node which contains mouse axis
 
 						if (top >= 0) {
-							System.out.println("You have selected " + nodeList.get(top).compType);
 							CompNode topNode = nodeList.get(top);
 							offX = e.getX() - topNode.startX;
 							offY = e.getY() - topNode.startY;
@@ -399,12 +424,15 @@ public class TestGUI extends JFrame {
 							nodeList.moveToLast(top);
 							top = nodeList.getSize() - 1;
 							highlight = true;
+
 							/*
-							 * 앞으로 나온 컴포넌트 가 활성화되었다는 것을 보여주기 위해 상자를 하나 더 그려주자.
-							 * 어차피 이놈은 하나만 그리면 된다.
-							 * 
+							 * 클릭했을 때 Attribute Pane에 관련 정보가 뜨도록 만들어주자.
 							 */
-						} // end of if, when top is bigger than zero.
+							setAttributePane(topNode);
+
+						} else {
+							//highlight = false;
+						}
 					} // end of if, when nodeList's size is not zero
 					repaint();
 				} // end of else, when addComponentMode is false
@@ -413,6 +441,7 @@ public class TestGUI extends JFrame {
 			public void mouseDragged(MouseEvent e) {
 				if (addComponentMode) {
 					lastPoint = e.getPoint();
+					//highlight = false;
 				} else {
 					/*
 					 * 만약에 top(현재 클릭한 컴포넌트 중 가장 높이 있는놈) 가 0이상, 즉 마우스가 클릭이 된 상태에서
@@ -422,6 +451,8 @@ public class TestGUI extends JFrame {
 						CompNode topNode = nodeList.get(top);
 						topNode.startX = e.getX() - offX;
 						topNode.startY = e.getY() - offY;
+
+						setAttributePane(topNode);
 					}
 				}
 				repaint();
@@ -459,23 +490,18 @@ public class TestGUI extends JFrame {
 
 					switch ((String) nodeInfo) {
 					case ("Button"):
-						System.out.println("hi Button");
 						newNode.compType = ComponentStruct.COMP_BUTTON;
 						break;
 					case ("Check Box"):
-						System.out.println("hi Check Box");
 						newNode.compType = ComponentStruct.COMP_CHECK_BOX;
 						break;
 					case ("Label"):
-						System.out.println("hi Label");
 						newNode.compType = ComponentStruct.COMP_LABEL;
 						break;
 					case ("Text Box"):
-						System.out.println("hi Text Box");
 						newNode.compType = ComponentStruct.COMP_TEXT_BOX;
 						break;
 					case ("Combo Box"):
-						System.out.println("hi Combo Box");
 						newNode.compType = ComponentStruct.COMP_COMBO_BOX;
 						break;
 
@@ -483,22 +509,17 @@ public class TestGUI extends JFrame {
 
 					// Linked List에다가 집어넣기
 					nodeList.add(newNode);
-					System.out.println("size : " + nodeList.getSize());
 
+					// 이제 다시 addComponentMode를 원래대로 돌려놓고 마우스를 default 모양으로 바꿔야지
+					addComponentMode = false;
 				} // end of addComponentMode checking
 
-				// 이제 다시 addComponentMode를 원래대로 돌려놓고 마우스를 default 모양으로 바꿔야지
-				addComponentMode = false;
+				highlight = false;
 
-				// top 를 -1로 다시 내려놓아야
 				top = -1;
-
 				// startPoint, lastPoint 초기화
 				startPoint = null;
 				lastPoint = null;
-				
-				//highlight 초기화
-				highlight = false;
 
 			} // end of mouseReleased method
 
