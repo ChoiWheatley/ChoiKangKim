@@ -73,7 +73,7 @@ public class ComponentStruct {
 			tempCompNode = null; // 이제 참조할 수 있는 수단이 없으므로 JVM이 알아서 처리해주겠지?
 
 		} else {
-			//index가 0이라서 head를 다시 지정해줘야한다.
+			// index가 0이라서 head를 다시 지정해줘야한다.
 			CompNode headNode = this.head;
 			this.head = headNode.link;
 			headNode = null;
@@ -112,11 +112,11 @@ public class ComponentStruct {
 	// 2. 인덱스(였던)의 노드를 tail의 link로 연결한다.
 	// 3. 2의 노드의 link를 dummyNode로 연결한다.
 	public void moveToLast(int index) {
-		//인덱스가 tail이면...
-		if (index == this.size-1){
+		// 인덱스가 tail이면...
+		if (index == this.size - 1) {
 			return;
 		}
-		if (index == 0){
+		if (index == 0) {
 			CompNode headNode = this.head;
 			this.head = headNode.link;
 			this.tail.link = headNode;
@@ -137,12 +137,12 @@ public class ComponentStruct {
 // Each components are stored in
 // this class.
 class CompNode {
-	Point startPoint;
-	Point lastPoint;
+	int startX;
+	int startY;
 	int xLength;
 	int yLength;
 	int compType;
-	String compText;
+	String name;
 	String compTextAttr;
 	Color compColor;
 
