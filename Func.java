@@ -11,91 +11,186 @@ import java.util.*;
 public class Func extends JFrame{
 	private static final long serialVersionUID = 1L;
 
-	JSONParser parser = new JSONParser();
 	String path = new String();
-	ComponentStruct nodeList = new ComponentStruct();
 
-	// 파일 열기
-	public void FileOpen(JFileChooser fileChooser) {
-		if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-			File file = fileChooser.getSelectedFile();
-			try {
-				Object obj = parser.parse(new FileReader(file.toString()));
-				String data = obj.toString();
-				JSONParser parser = new JSONParser();
-				JSONObject jobj = (JSONObject) parser.parse(data);
-				JSONArray jarr = (JSONArray)jobj.get("Comp");
+	public class Function extends JPanel{
+		private static final long serialVersionUID = 1L;
+		public ComponentStruct nodeList;
 
-				for (int i = 0; i < jarr.size(); i++) {
-					JSONObject tmp = (JSONObject)jarr.get(i);
-					nodeList.get(i).startX = (int)tmp.get("startX");
-					nodeList.get(i).startY = (int)tmp.get("startY");
-					nodeList.get(i).xLength = (int)tmp.get("xLength");
-					nodeList.get(i).yLength = (int)tmp.get("yLength");
-					nodeList.get(i).compType = (int)tmp.get("compType");
-					nodeList.get(i).name = (String)tmp.get("name");
-					nodeList.get(i).compTextAttr = (String)tmp.get("compTextAttr");
-					nodeList.get(i).compColor = (Color)tmp.get("compColor");
-					nodeList.add(nodeList.get(i));
+		// 파일 열기
+		public void FileOpen(TestGUI frame, JFileChooser fileChooser) {
+			if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+				//String path = fileChooser.getSelectedFile().getPath();
+				File file = fileChooser.getSelectedFile();
+				frame.nodeList = new ComponentStruct();
+				//this.nodeList = frame.nodeList;
+				try {
+					JSONParser parser = new JSONParser();
+					Object obj = parser.parse(new FileReader(file.toString()));
+					JSONObject temp = (JSONObject) obj;
+					JSONArray jarr = (JSONArray)temp.get("Components");
+
+					for (int i = 0; i < jarr.size(); i++) {
+						JSONObject tmp = (JSONObject)jarr.get(i);
+						Long tmpX = Long.parseLong((String) tmp.get("startX"));
+						Long tmpY = Long.parseLong((String) tmp.get("startY"));
+						Long tmpXL = Long.parseLong((String) tmp.get("xLength"));
+						Long tmpTL = Long.parseLong((String) tmp.get("yLength"));
+						Long tmpCT = Long.parseLong((String) tmp.get("compType"));
+						
+						CompNode tempnode = new CompNode();
+						tempnode.startX = tmpX.intValue();
+						tempnode.startY = tmpY.intValue();
+						tempnode.xLength = tmpXL.intValue();
+						tempnode.yLength = tmpTL.intValue();
+						tempnode.compType = tmpCT.intValue();
+						tempnode.name = (String) tmp.get("name");
+						tempnode.compTextAttr = (String) tmp.get("CompTextAttr");
+						//this.nodeList.get(i).compColor = (Color)tmp.get("compColor");
+						frame.nodeList.add(tempnode);
+					}
+					repaint();
+				}
+				catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+				catch (ParseException e) {
+					e.printStackTrace();
 				}
 			}
-			catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
-			catch (ParseException e) {
-				e.printStackTrace();
+		}
+
+		// 새로 만들기
+		public void FileMake(TestGUI frame, JFileChooser fileChooser) {
+			frame.dispose();
+			TestGUI frame2 = new TestGUI();
+			frame2.main(null);
+		}
+
+		// 저장
+		public void SaveFile(TestGUI frame, JFileChooser fileChooser) {
+			if(fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+				//File file = fileChooser.getSelectedFile();
+				this.nodeList = frame.nodeList;
+				JSONArray jarr = new JSONArray();
+				JSONObject list = new JSONObject();
+
+				for (int i = 0; i < nodeList.getSize(); i++) {
+					JSONObject jobj = new JSONObject();
+					jobj.put("startX", Long.toString(nodeList.get(i).startX));
+					jobj.put("startY", Long.toString(nodeList.get(i).startY));
+					jobj.put("xLength", Long.toString(nodeList.get(i).xLength));
+					jobj.put("yLength", Long.toString(nodeList.get(i).yLength));
+					jobj.put("compType", Long.toString(nodeList.get(i).compType));
+					jobj.put("name", nodeList.get(i).name);
+					jobj.put("compTextAttr", nodeList.get(i).compTextAttr);
+					//jobj.put("compColor", nodeList.get(i).compColor);
+
+					jarr.add(jobj);
+				}
+
+				list.put("Components", jarr);
+				System.out.println(list);
+
+				try {
+					String path = fileChooser.getSelectedFile().getPath();
+					FileWriter filewriter = new FileWriter(path); 
+					filewriter.write(list.toJSONString());
+					filewriter.flush();
+					filewriter.close();
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
-	}
 
-	// 새로 만들기
-	public void FileMake(JFileChooser fileChooser) {
-		// 모든 componant값 삭제
-	}
+		// 다른 이름으로 저장
+		public void SaveName(TestGUI frame, JFileChooser fileChooser) {
+			if(fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+				//File file = fileChooser.getSelectedFile();
+				this.nodeList = frame.nodeList;
+				JSONArray jarr = new JSONArray();
+				JSONObject list = new JSONObject();
 
-	// 저장
-	public void SaveFile() {
-		JSONArray jarr = new JSONArray();
+				for (int i = 0; i < nodeList.getSize(); i++) {
+					JSONObject jobj = new JSONObject();
+					jobj.put("startX", Long.toString(nodeList.get(i).startX));
+					jobj.put("startY", Long.toString(nodeList.get(i).startY));
+					jobj.put("xLength", Long.toString(nodeList.get(i).xLength));
+					jobj.put("yLength", Long.toString(nodeList.get(i).yLength));
+					jobj.put("compType", Long.toString(nodeList.get(i).compType));
+					jobj.put("name", nodeList.get(i).name);
+					jobj.put("compTextAttr", nodeList.get(i).compTextAttr);
+					//jobj.put("compColor", nodeList.get(i).compColor);
 
-		for (int i = 0; i < nodeList.getSize(); i++) {
-			JSONObject jobj = new JSONObject();
-			
-			jobj.put("startPoint", nodeList.get(i).startX);
-			jobj.put("lastPoint", nodeList.get(i).startY);
-			jobj.put("xLength", nodeList.get(i).xLength);
-			jobj.put("yLength", nodeList.get(i).yLength);
-			jobj.put("compType", nodeList.get(i).compType);
-			jobj.put("name", nodeList.get(i).name);
-			jobj.put("compTextAttr", nodeList.get(i).compTextAttr);
-			jobj.put("compColor", nodeList.get(i).compColor);
-			
-			jarr.add(jobj);
+					jarr.add(jobj);
+				}
+
+				list.put("Components", jarr);
+				System.out.println(list);
+
+				try {
+					String path = fileChooser.getSelectedFile().getPath();
+					FileWriter filewriter = new FileWriter(path); 
+					filewriter.write(list.toJSONString());
+					filewriter.flush();
+					filewriter.close();
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		
-		JSONObject Comp = new JSONObject();
-		Comp.put("Comp", jarr);
-		
-		try (FileWriter filewriter = new FileWriter("c:\\jsonfile/NewFile.json")) {
-			filewriter.write(jarr.toJSONString());
-			filewriter.flush();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+		/*
+		// java 파일 생성
+		public void JavaMake(TestGUI frame, JFileChooser fileChooser) {
+			if(fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
+				File file = fileChooser.getSelectedFile();
+				this.nodeList = frame.nodeList
+				try {
+					FileWriter fileWriter = new FileWriter(file);
+					for (int i = 0; i < nodeList.getSize(); i++) {
+						switch(nodeList.get(i).compType) {
+						case 1 : // button
+							fileWriter.write("JButton tmp = new JButton(nodeList.get(i).compTextAttr);"\n);
+							fileWriter.write("tmp.setSize(nodeList.get(i).xLength, nodeList.get(i).yLength);"\n);
+							fileWriter.write("tmp.setLocation(nodeList.get(i).startX, nodeList.get(i).startY);"\n);
+							// 변수 이름 지정
+							// 색 지정
+							fileWriter.flush();
+						case 2 : // check box
+							fileWriter.write("JCheckBox tmp = new JCheckBox(nodeList.get(i).compTextAttr);"\n);
+							fileWriter.write("tmp.setSize(nodeList.get(i).xLength, nodeList.get(i).yLength);"\n);
+							fileWriter.write("tmp.setLocation(nodeList.get(i).startX, nodeList.get(i).startY);"\n);
+							
+						case 3 : // label
+							fileWriter.write("JLabel tmp = new JLabel(nodeList.get(i).compTextAttr);"\n);
+							fileWriter.write("tmp.setSize(nodeList.get(i).xLength, nodeList.get(i).yLength);"\n);
+							fileWriter.write("tmp.setLocation(nodeList.get(i).startX, nodeList.get(i).startY);"\n);
+							
+						case 4 : // text box
+							fileWriter.write("JTextField tmp = new JTextFiled(nodeList.get(i).compTextAttr);"\n);
+							fileWriter.write("tmp.setSize(nodeList.get(i).xLength, nodeList.get(i).yLength);"\n);
+							fileWriter.write("tmp.setLocation(nodeList.get(i).startX, nodeList.get(i).startY);"\n);
+							
+						case 5 : // combo box
+							fileWriter.write("JComboBox tmp = new JButton(nodeList.get(i).compTextAttr);"\n);
+							fileWriter.write("tmp.setSize(nodeList.get(i).xLength, nodeList.get(i).yLength);"\n);
+							fileWriter.write("tmp.setLocation(nodeList.get(i).startX, nodeList.get(i).startY);"\n);
+							
+						}
+					}
+				}
+				catch (IOException e){
+					
+				}
 
-	// 다른 이름으로 저장
-	public void SaveName(JFileChooser fileChooser) {
-		if(fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
-			File file = fileChooser.getSelectedFile();
-		}
-	}
-
-	// java 파일 생성
-	public void JavaMake() {
-		// 이건 모르겠다...ㅠㅠ
+			}
+*/		
 	}
 }
