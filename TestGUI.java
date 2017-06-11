@@ -1,4 +1,4 @@
-package testGUI;
+package swing;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -261,7 +261,7 @@ public class TestGUI extends JFrame {
 		nameValue.setText("x");
 		nameValue.setColumns(10);
 		namePane.add(nameValue);
-
+                  
 		JPanel compColorPane = new JPanel();
 		compColorPane.setBackground(new Color(224, 255, 255));
 		AttributePane.add(compColorPane);
@@ -386,7 +386,10 @@ public class TestGUI extends JFrame {
 			int tempLengthX, tempLengthY;
 			int top = -1;
 			int offX, offY;
-
+			int offL,offW;
+            int topX,topY;
+            int JS=0;
+            int gX,gY;
 			public void mousePressed(MouseEvent e) {
 				if (addComponentMode) {
 					startPoint = e.getPoint();
@@ -397,6 +400,7 @@ public class TestGUI extends JFrame {
 					 * contains(int x, int y, int width, int height) 메소드 를 사용하여
 					 * 클릭여부를 확인한다.
 					 */
+				JS = 0;
 					if (nodeList.getSize() != 0) {
 						top = -1;
 						for (int i = 0; i < nodeList.getSize(); i++) {
@@ -415,21 +419,34 @@ public class TestGUI extends JFrame {
 							// node which contains mouse axis
 
 						if (top >= 0) {
+							
 							CompNode topNode = nodeList.get(top);
 							offX = e.getX() - topNode.startX;
 							offY = e.getY() - topNode.startY;
+							
 							/*
 							 * 그리고, 드래그된 컴포넌트는 노드의 제일 앞으로 오게 설정하고 싶다.
 							 */
+						
 							nodeList.moveToLast(top);
 							top = nodeList.getSize() - 1;
 							highlight = true;
-
+						//	System.out.println(topNode.startX +" "+ tempStartX);
+							int a = topNode.startX + topNode.xLength;
+							int b = topNode.startY + topNode.yLength;
+							if(e.getX()<a && e.getX()>a-7 && e.getY()<b && e.getY()>b-7){
+								JS = 1;
+								gX = e.getX(); gY = e.getY();
+								offL = topNode.xLength;
+								offW = topNode.yLength;
+							}
+                            
 							/*
 							 * 클릭했을 때 Attribute Pane에 관련 정보가 뜨도록 만들어주자.
 							 */
-							setAttributePane(topNode);
-
+							
+							 setAttributePane(topNode);
+							
 						} else {
 							//highlight = false;
 						}
@@ -447,11 +464,22 @@ public class TestGUI extends JFrame {
 					 * 만약에 top(현재 클릭한 컴포넌트 중 가장 높이 있는놈) 가 0이상, 즉 마우스가 클릭이 된 상태에서
 					 * 잡힌 컴포넌트가 있다면 드래그시 따라 움직이도록 만들어야 한다.
 					 */
+					
 					if (top >= 0) {
+                       // topX = e.getX(); topY = e.getY();                
+					if(JS == 1) {
+						
+						CompNode topNode = nodeList.get(top);
+						
+						topNode.xLength = offL+e.getX()-gX;
+						topNode.yLength = offW+e.getY()-gY;
+						//setAttributePane(increseNode);
+						}
+					else{
 						CompNode topNode = nodeList.get(top);
 						topNode.startX = e.getX() - offX;
 						topNode.startY = e.getY() - offY;
-
+						}
 						setAttributePane(topNode);
 					}
 				}
@@ -472,6 +500,7 @@ public class TestGUI extends JFrame {
 					} else {
 						lastPoint = e.getPoint();
 					}
+				
 					TestGUI.super.setCursor(Cursor.DEFAULT_CURSOR);
 					repaint();
 
@@ -509,10 +538,11 @@ public class TestGUI extends JFrame {
 
 					// Linked List에다가 집어넣기
 					nodeList.add(newNode);
+			}
 
 					// 이제 다시 addComponentMode를 원래대로 돌려놓고 마우스를 default 모양으로 바꿔야지
 					addComponentMode = false;
-				} // end of addComponentMode checking
+				 // end of addComponentMode checking
 
 				highlight = false;
 
