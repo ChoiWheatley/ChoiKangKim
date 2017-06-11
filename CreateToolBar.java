@@ -2,12 +2,15 @@ package testGUI;
 
 import java.awt.*;
 import javax.swing.*;
+
+import testGUI.Func.Function;
+
 import java.awt.event.*;
 
 public class CreateToolBar extends JFrame implements ActionListener{
 	private static final long serialVersionUID = 1L;
 
-	TestGUI frame = new TestGUI();
+	TestGUI frame;
 	JFileChooser fileChooser = new JFileChooser();
 	JToolBar toolbar = new JToolBar();
 	
@@ -64,24 +67,29 @@ public class CreateToolBar extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == openButton){
 			Func func = new Func();
-			func.FileOpen(fileChooser);
+			Func.Function func2 = func.new Function();
+			func2.FileOpen(frame, fileChooser);	
 		}
 		else if(e.getSource() == newButton){
-			// Func func = new Func();
-			// func.FileMake();
+			Func func = new Func();
+			Func.Function func2 = func.new Function();
+			func2.FileMake(frame, fileChooser);
 		}
 		
 		else if(e.getSource() == saveButton){
 			Func func = new Func();
-			func.SaveFile();
+			Func.Function func2 = func.new Function();
+			func2.SaveFile(frame, fileChooser);			
 		}
 		if(e.getSource() == savenewButton){
 			Func func = new Func();
-			func.SaveName(fileChooser);	
+			Func.Function func2 = func.new Function();
+			func2.SaveName(frame, fileChooser);			
 		}
 		else if(e.getSource() == javaButton){
-			// Func func = new Func();
-			// func.JavaMake();
+			Func func = new Func();
+			Func.Function func2 = func.new Function();
+			//func2.JavaMake(frame, fileChooser);			
 		}
 		else if(e.getSource() == exitButton){
 			System.exit(1);
