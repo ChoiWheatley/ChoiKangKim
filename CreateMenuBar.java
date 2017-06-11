@@ -7,10 +7,14 @@ import java.io.File;
 
 import javax.swing.filechooser.*;
 
+import com.sun.org.apache.xpath.internal.functions.Function2Args;
+
+import testGUI.Func.Function;
+
 class CreateMenuBar extends JFrame implements ActionListener{
 	private static final long serialVersionUID = 1L;
 	
-	TestGUI frame = new TestGUI();
+	TestGUI frame;
 	JFileChooser fileChooser = new JFileChooser();
 	
 	JMenuBar menuBar = new JMenuBar();
@@ -53,24 +57,29 @@ class CreateMenuBar extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == fileOpen){
 			Func func = new Func();
-			func.FileOpen(fileChooser);
+			Func.Function func2 = func.new Function();
+			func2.FileOpen(frame, fileChooser);			
 		}
 		else if(e.getSource() == fileMake){
-			// Func func = new Func();
-			// func.FileMake();
+			Func func = new Func();
+			Func.Function func2 = func.new Function();
+			func2.FileMake(frame, fileChooser);
 		}
 		
 		else if(e.getSource() == saveFile){
 			Func func = new Func();
-			func.SaveFile();
+			Func.Function func2 = func.new Function();
+			func2.SaveFile(frame, fileChooser);			
 		}
 		else if(e.getSource() == saveName){
 			Func func = new Func();
-			func.SaveName(fileChooser);	
+			Func.Function func2 = func.new Function();
+			func2.SaveName(frame, fileChooser);			
 		}
 		else if(e.getSource() == javaMake){
-			// Func func = new Func();
-			// func.JavaMake();
+			Func func = new Func();
+			Func.Function func2 = func.new Function();
+			//func2.JavaMake(frame, fileChooser);			
 		}
 		else if(e.getSource() == exitBuilder){
 			System.exit(1);
