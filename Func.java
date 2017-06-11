@@ -176,7 +176,7 @@ public class Func extends JFrame{
 
 				for (int i = 0; i < frame.nodeList.getSize(); i++) {
 					// component의 이름이 null이면 저장 안하고 오류메세지 띄움(try catch 문으로 하고싶었는데 못함)
-					//if (frame.nodeList.get(i).name !=null) {
+					if (frame.nodeList.get(i).name !=null) {
 						switch(frame.nodeList.get(i).compType) {
 						case 1 : // button
 							fileWriter.write("JButton " + frame.nodeList.get(i).name + " = new JButton(\"" + frame.nodeList.get(i).compTextAttr + "\");\n");
@@ -232,14 +232,11 @@ public class Func extends JFrame{
 						}
 					}
 					// component의 이름이 null일 경우
-					//else {
-						//JLabel label = new JLabel("There is some Components named 'null'");
-						//getContentPane().add(label);
-						//this.setSize(200, 100);
-						//this.setVisible(true);
-						//return;
-				//	}
-				//}
+					else {
+						JOptionPane.showMessageDialog(null, "There is some components named 'null'");
+						return;
+					}
+				}
 
 				fileWriter.write("frame.setSize(980, 640);\n");
 				fileWriter.write("frame.setDefaultCloseOperation(EXIT_ON_CLOSE);\n");
