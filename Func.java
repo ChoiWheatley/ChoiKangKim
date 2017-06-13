@@ -31,7 +31,7 @@ public class Func extends JFrame{
 					// json에서 읽어온 components값 현재 frame의 components에 넣기
 					for (int i = 0; i < jarr.size(); i++) {
 						JSONObject tmp = (JSONObject)jarr.get(i);
-						
+
 						// 왜 저장이 Long형으로 되는지는 모르겠음...ㅂㄷㅂㄷ
 						Long tmpX = Long.parseLong((String) tmp.get("startX"));
 						Long tmpY = Long.parseLong((String) tmp.get("startY"));
@@ -41,7 +41,7 @@ public class Func extends JFrame{
 						Long tmpCR = Long.parseLong((String) tmp.get("compColorR"));
 						Long tmpCG = Long.parseLong((String) tmp.get("compColorG"));
 						Long tmpCB = Long.parseLong((String) tmp.get("compColorB"));
-						
+
 						CompNode tempnode = new CompNode();
 						tempnode.startX = tmpX.intValue();
 						tempnode.startY = tmpY.intValue();
@@ -82,177 +82,171 @@ public class Func extends JFrame{
 				this.nodeList = frame.nodeList;
 				JSONArray jarr = new JSONArray();
 				JSONObject list = new JSONObject(); // list에 모든 components값 저장
-													// 형식은 {"Components" : [{component1}], [{component2}],...}]}
+				// 형식은 {"Components" : [{component1}], [{component2}],...}]}
 
 				for (int i = 0; i < nodeList.getSize(); i++) {
-					JSONObject jobj = new JSONObject();
-					jobj.put("startX", Long.toString(nodeList.get(i).startX));
-					jobj.put("startY", Long.toString(nodeList.get(i).startY));
-					jobj.put("xLength", Long.toString(nodeList.get(i).xLength));
-					jobj.put("yLength", Long.toString(nodeList.get(i).yLength));
-					jobj.put("compType", Long.toString(nodeList.get(i).compType));
-					jobj.put("name", nodeList.get(i).name);
-					jobj.put("compTextAttr", nodeList.get(i).compTextAttr);
-					// color 저장하려고 R, G, B로 나눴음
-					jobj.put("compColorR", Long.toString(nodeList.get(i).compColor.getRed()));
-					jobj.put("compColorG", Long.toString(nodeList.get(i).compColor.getGreen()));
-					jobj.put("compColorB", Long.toString(nodeList.get(i).compColor.getBlue()));
+					if (frame.nodeList.get(i).name !=null) {
+						JSONObject jobj = new JSONObject();
+						jobj.put("startX", Long.toString(nodeList.get(i).startX));
+						jobj.put("startY", Long.toString(nodeList.get(i).startY));
+						jobj.put("xLength", Long.toString(nodeList.get(i).xLength));
+						jobj.put("yLength", Long.toString(nodeList.get(i).yLength));
+						jobj.put("compType", Long.toString(nodeList.get(i).compType));
+						jobj.put("name", nodeList.get(i).name);
+						jobj.put("compTextAttr", nodeList.get(i).compTextAttr);
+						// color 저장하려고 R, G, B로 나눴음
+						jobj.put("compColorR", Long.toString(nodeList.get(i).compColor.getRed()));
+						jobj.put("compColorG", Long.toString(nodeList.get(i).compColor.getGreen()));
+						jobj.put("compColorB", Long.toString(nodeList.get(i).compColor.getBlue()));
 
-					jarr.add(jobj);
+						jarr.add(jobj);
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "There is some components named 'null'");
+						return;
+					}	
 				}
 
-				list.put("Components", jarr);
-				//System.out.println(list); 잘 저장되는지 확인하기 위해서 넣은거얌
+					list.put("Components", jarr);
+					//System.out.println(list); 잘 저장되는지 확인하기 위해서 넣은거얌
 
-				try {
-					// file에 쓰는 작업
-					String path = fileChooser.getSelectedFile().getPath();
-					FileWriter filewriter = new FileWriter(path); 
-					filewriter.write(list.toJSONString());
-					filewriter.flush();
-					filewriter.close();
-				}
-				catch (IOException e) {
-					e.printStackTrace();
+					try {
+						// file에 쓰는 작업
+						String path = fileChooser.getSelectedFile().getPath();
+						FileWriter filewriter = new FileWriter(path); 
+						filewriter.write(list.toJSONString());
+						filewriter.flush();
+						filewriter.close();
+					}
+					catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
-		}
 
-		// 다른 이름으로 저장(저장이랑 비슷함)
+			// 다른 이름으로 저장(저장이랑 비슷함)
 		public void SaveName(TestGUI frame, JFileChooser fileChooser) {
 			if(fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
 				this.nodeList = frame.nodeList;
 				JSONArray jarr = new JSONArray();
-				JSONObject list = new JSONObject();
+				JSONObject list = new JSONObject(); // list에 모든 components값 저장
+				// 형식은 {"Components" : [{component1}], [{component2}],...}]}
 
 				for (int i = 0; i < nodeList.getSize(); i++) {
-					JSONObject jobj = new JSONObject();
-					jobj.put("startX", Long.toString(nodeList.get(i).startX));
-					jobj.put("startY", Long.toString(nodeList.get(i).startY));
-					jobj.put("xLength", Long.toString(nodeList.get(i).xLength));
-					jobj.put("yLength", Long.toString(nodeList.get(i).yLength));
-					jobj.put("compType", Long.toString(nodeList.get(i).compType));
-					jobj.put("name", nodeList.get(i).name);
-					jobj.put("compTextAttr", nodeList.get(i).compTextAttr);
-					jobj.put("compColorR", Long.toString(nodeList.get(i).compColor.getRed()));
-					jobj.put("compColorG", Long.toString(nodeList.get(i).compColor.getGreen()));
-					jobj.put("compColorB", Long.toString(nodeList.get(i).compColor.getBlue()));
+					if (frame.nodeList.get(i).name !=null) {
+						JSONObject jobj = new JSONObject();
+						jobj.put("startX", Long.toString(nodeList.get(i).startX));
+						jobj.put("startY", Long.toString(nodeList.get(i).startY));
+						jobj.put("xLength", Long.toString(nodeList.get(i).xLength));
+						jobj.put("yLength", Long.toString(nodeList.get(i).yLength));
+						jobj.put("compType", Long.toString(nodeList.get(i).compType));
+						jobj.put("name", nodeList.get(i).name);
+						jobj.put("compTextAttr", nodeList.get(i).compTextAttr);
+						// color 저장하려고 R, G, B로 나눴음
+						jobj.put("compColorR", Long.toString(nodeList.get(i).compColor.getRed()));
+						jobj.put("compColorG", Long.toString(nodeList.get(i).compColor.getGreen()));
+						jobj.put("compColorB", Long.toString(nodeList.get(i).compColor.getBlue()));
 
-					jarr.add(jobj);
+						jarr.add(jobj);
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "There is some components named 'null'");
+						return;
+					}	
 				}
 
-				list.put("Components", jarr);
-				System.out.println(list);
+					list.put("Components", jarr);
+					//System.out.println(list); 잘 저장되는지 확인하기 위해서 넣은거얌
 
+					try {
+						// file에 쓰는 작업
+						String path = fileChooser.getSelectedFile().getPath();
+						FileWriter filewriter = new FileWriter(path); 
+						filewriter.write(list.toJSONString());
+						filewriter.flush();
+						filewriter.close();
+					}
+					catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+
+			// java 파일 생성(워드패드로 확인해보면 형식 잘맞춘듯? 약간 뿌듯
+			public void JavaMake(TestGUI frame, JFileChooser fileChooser) {
 				try {
-					String path = fileChooser.getSelectedFile().getPath();
-					FileWriter filewriter = new FileWriter(path); 
-					filewriter.write(list.toJSONString());
-					filewriter.flush();
-					filewriter.close();
+					File file = new File("MakeGUI.java");
+					FileWriter fileWriter = new FileWriter(file); 
+					fileWriter.write("import javax.swing.*;\n");
+					fileWriter.write("public class MakeGUI extends JFrame{\n");
+					fileWriter.write("private static final long serialVersionUID = 1L;\n");
+					fileWriter.write("public static void main (String[] args) {\n");
+					fileWriter.write("MakeGUI gui = new MakeGUI();\n");
+					fileWriter.write("\n");
+					fileWriter.write("}\n");
+
+					fileWriter.write("public MakeGUI() {\n");
+					fileWriter.write("JFrame frame = new JFrame();\n");
+					fileWriter.write("frame.setLayout(null);\n");
+
+					for (int i = 0; i < frame.nodeList.getSize(); i++) {
+						// component의 이름이 null이면 저장 안하고 오류메세지 띄움(try catch 문으로 하고싶었는데 못함)
+						if (frame.nodeList.get(i).name !=null) {
+							switch(frame.nodeList.get(i).compType) {
+							case 1 : // button
+								fileWriter.write("JButton " + frame.nodeList.get(i).name + " = new JButton(\"" + frame.nodeList.get(i).compTextAttr + "\");\n");
+								fileWriter.write(frame.nodeList.get(i).name + ".setSize(" + frame.nodeList.get(i).xLength + "," + frame.nodeList.get(i).yLength + ");\n");
+								fileWriter.write(frame.nodeList.get(i).name + ".setLocation(" + frame.nodeList.get(i).startX + "," + frame.nodeList.get(i).startY + ");\n");
+								fileWriter.write(frame.nodeList.get(i).name + ".getBackground("
+										+ frame.nodeList.get(i).compColor.getRed() + "," + frame.nodeList.get(i).compColor.getGreen()+ ","
+										+ frame.nodeList.get(i).compColor.getBlue() + ");\n");
+								fileWriter.flush();
+								break;
+							case 2 : // label
+								fileWriter.write("JLable " + frame.nodeList.get(i).name + " = new JLable(\"" + frame.nodeList.get(i).compTextAttr + "\");\n");
+								fileWriter.write(frame.nodeList.get(i).name + ".setSize(" + frame.nodeList.get(i).xLength + "," + frame.nodeList.get(i).yLength + ");\n");
+								fileWriter.write(frame.nodeList.get(i).name + ".setLocation(" + frame.nodeList.get(i).startX + "," + frame.nodeList.get(i).startY + ");\n");
+								fileWriter.write(frame.nodeList.get(i).name + ".getBackground("
+										+ frame.nodeList.get(i).compColor.getRed() + "," + frame.nodeList.get(i).compColor.getGreen()+ ","
+										+ frame.nodeList.get(i).compColor.getBlue() + ");\n");
+								fileWriter.flush();
+								break;
+
+							case 3 : // text box
+								fileWriter.write("JTextBox " + frame.nodeList.get(i).name + " = new JTextBox(\"" + frame.nodeList.get(i).compTextAttr + "\");\n");
+								fileWriter.write(frame.nodeList.get(i).name + ".setSize(" + frame.nodeList.get(i).xLength + "," + frame.nodeList.get(i).yLength + ");\n");
+								fileWriter.write(frame.nodeList.get(i).name + ".setLocation(" + frame.nodeList.get(i).startX + "," + frame.nodeList.get(i).startY + ");\n");
+								fileWriter.write(frame.nodeList.get(i).name + ".getBackground("
+										+ frame.nodeList.get(i).compColor.getRed() + "," + frame.nodeList.get(i).compColor.getGreen()+ ","
+										+ frame.nodeList.get(i).compColor.getBlue() + ");\n");
+								fileWriter.flush();
+								break;
+							default : 
+								break;
+							}
+						}
+						// component의 이름이 null일 경우
+						else {
+							JOptionPane.showMessageDialog(null, "There is some components named 'null'");
+							return;
+						}
+					}
+
+					fileWriter.write("frame.setSize(980, 640);\n");
+					fileWriter.write("frame.setDefaultCloseOperation(EXIT_ON_CLOSE);\n");
+					fileWriter.write("frame.setVisible(true);\n");
+
+					for (int i = 0; i < frame.nodeList.getSize(); i++)
+						fileWriter.write("frame.add(" + frame.nodeList.get(i).name + ");\n");
+					fileWriter.write("}\n");
+					fileWriter.write("}\n");
+
+					fileWriter.flush();
+					fileWriter.close();
 				}
-				catch (IOException e) {
+				catch (IOException e){
 					e.printStackTrace();
 				}
 			}
 		}
-
-		// java 파일 생성(워드패드로 확인해보면 형식 잘맞춘듯? 약간 뿌듯
-		public void JavaMake(TestGUI frame, JFileChooser fileChooser) {
-			try {
-				File file = new File("MakeGUI.java");
-				FileWriter fileWriter = new FileWriter(file); 
-				fileWriter.write("import javax.swing.*;\n");
-				fileWriter.write("public class MakeGUI extends JFrame{\n");
-				fileWriter.write("private static final long serialVersionUID = 1L;\n");
-				fileWriter.write("public static void main (String[] args) {\n");
-				fileWriter.write("MakeGUI gui = new MakeGUI();\n");
-				fileWriter.write("\n");
-				fileWriter.write("}\n");
-
-				fileWriter.write("public MakeGUI() {\n");
-				fileWriter.write("JFrame frame = new JFrame();\n");
-				fileWriter.write("frame.setLayout(null);\n");
-
-				for (int i = 0; i < frame.nodeList.getSize(); i++) {
-					// component의 이름이 null이면 저장 안하고 오류메세지 띄움(try catch 문으로 하고싶었는데 못함)
-					if (frame.nodeList.get(i).name !=null) {
-						switch(frame.nodeList.get(i).compType) {
-						case 1 : // button
-							fileWriter.write("JButton " + frame.nodeList.get(i).name + " = new JButton(\"" + frame.nodeList.get(i).compTextAttr + "\");\n");
-							fileWriter.write(frame.nodeList.get(i).name + ".setSize(" + frame.nodeList.get(i).xLength + "," + frame.nodeList.get(i).yLength + ");\n");
-							fileWriter.write(frame.nodeList.get(i).name + ".setLocation(" + frame.nodeList.get(i).startX + "," + frame.nodeList.get(i).startY + ");\n");
-							fileWriter.write(frame.nodeList.get(i).name + ".getBackground("
-											+ frame.nodeList.get(i).compColor.getRed() + "," + frame.nodeList.get(i).compColor.getGreen()+ ","
-											+ frame.nodeList.get(i).compColor.getBlue() + ");\n");
-							fileWriter.flush();
-							break;
-						case 2 : // check box
-							fileWriter.write("JCheckBox " + frame.nodeList.get(i).name + " = new JCheckBox(\"" + frame.nodeList.get(i).compTextAttr + "\");\n");
-							fileWriter.write(frame.nodeList.get(i).name + ".setSize(" + frame.nodeList.get(i).xLength + "," + frame.nodeList.get(i).yLength + ");\n");
-							fileWriter.write(frame.nodeList.get(i).name + ".setLocation(" + frame.nodeList.get(i).startX + "," + frame.nodeList.get(i).startY + ");\n");
-							fileWriter.write(frame.nodeList.get(i).name + ".getBackground("
-									+ frame.nodeList.get(i).compColor.getRed() + "," + frame.nodeList.get(i).compColor.getGreen()+ ","
-									+ frame.nodeList.get(i).compColor.getBlue() + ");\n");
-							fileWriter.flush();
-							break;
-
-						case 3 : // label
-							fileWriter.write("JLable " + frame.nodeList.get(i).name + " = new JLable(\"" + frame.nodeList.get(i).compTextAttr + "\");\n");
-							fileWriter.write(frame.nodeList.get(i).name + ".setSize(" + frame.nodeList.get(i).xLength + "," + frame.nodeList.get(i).yLength + ");\n");
-							fileWriter.write(frame.nodeList.get(i).name + ".setLocation(" + frame.nodeList.get(i).startX + "," + frame.nodeList.get(i).startY + ");\n");
-							fileWriter.write(frame.nodeList.get(i).name + ".getBackground("
-									+ frame.nodeList.get(i).compColor.getRed() + "," + frame.nodeList.get(i).compColor.getGreen()+ ","
-									+ frame.nodeList.get(i).compColor.getBlue() + ");\n");
-							fileWriter.flush();
-							break;
-
-						case 4 : // text box
-							fileWriter.write("JTextBox " + frame.nodeList.get(i).name + " = new JTextBox(\"" + frame.nodeList.get(i).compTextAttr + "\");\n");
-							fileWriter.write(frame.nodeList.get(i).name + ".setSize(" + frame.nodeList.get(i).xLength + "," + frame.nodeList.get(i).yLength + ");\n");
-							fileWriter.write(frame.nodeList.get(i).name + ".setLocation(" + frame.nodeList.get(i).startX + "," + frame.nodeList.get(i).startY + ");\n");
-							fileWriter.write(frame.nodeList.get(i).name + ".getBackground("
-									+ frame.nodeList.get(i).compColor.getRed() + "," + frame.nodeList.get(i).compColor.getGreen()+ ","
-									+ frame.nodeList.get(i).compColor.getBlue() + ");\n");
-							fileWriter.flush();
-							break;
-
-						case 5 : // combo box
-							fileWriter.write("JComboBox " + frame.nodeList.get(i).name + " = new JComboBox(\"" + frame.nodeList.get(i).compTextAttr + "\");\n");
-							fileWriter.write(frame.nodeList.get(i).name + ".setSize(" + frame.nodeList.get(i).xLength + "," + frame.nodeList.get(i).yLength + ");\n");
-							fileWriter.write(frame.nodeList.get(i).name + ".setLocation(" + frame.nodeList.get(i).startX + "," + frame.nodeList.get(i).startY + ");\n");
-							fileWriter.write(frame.nodeList.get(i).name + ".getBackground("
-									+ frame.nodeList.get(i).compColor.getRed() + "," + frame.nodeList.get(i).compColor.getGreen()+ ","
-									+ frame.nodeList.get(i).compColor.getBlue() + ");\n");
-							fileWriter.flush();
-							break;
-
-						default : 
-							break;
-						}
-					}
-					// component의 이름이 null일 경우
-					else {
-						JOptionPane.showMessageDialog(null, "There is some components named 'null'");
-						return;
-					}
-				}
-
-				fileWriter.write("frame.setSize(980, 640);\n");
-				fileWriter.write("frame.setDefaultCloseOperation(EXIT_ON_CLOSE);\n");
-				fileWriter.write("frame.setVisible(true);\n");
-
-				for (int i = 0; i < frame.nodeList.getSize(); i++)
-					fileWriter.write("frame.add(" + frame.nodeList.get(i).name + ");\n");
-				fileWriter.write("}\n");
-				fileWriter.write("}\n");
-
-				fileWriter.flush();
-				fileWriter.close();
-			}
-			catch (IOException e){
-				e.printStackTrace();
-			}
-		}
 	}
-}
