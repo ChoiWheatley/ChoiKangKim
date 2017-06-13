@@ -107,24 +107,24 @@ public class Func extends JFrame{
 					}	
 				}
 
-					list.put("Components", jarr);
-					//System.out.println(list); 잘 저장되는지 확인하기 위해서 넣은거얌
+				list.put("Components", jarr);
+				//System.out.println(list); 잘 저장되는지 확인하기 위해서 넣은거얌
 
-					try {
-						// file에 쓰는 작업
-						String path = fileChooser.getSelectedFile().getPath();
-						FileWriter filewriter = new FileWriter(path); 
-						filewriter.write(list.toJSONString());
-						filewriter.flush();
-						filewriter.close();
-					}
-					catch (IOException e) {
-						e.printStackTrace();
-					}
+				try {
+					// file에 쓰는 작업
+					String path = fileChooser.getSelectedFile().getPath();
+					FileWriter filewriter = new FileWriter(path); 
+					filewriter.write(list.toJSONString());
+					filewriter.flush();
+					filewriter.close();
+				}
+				catch (IOException e) {
+					e.printStackTrace();
 				}
 			}
+		}
 
-			// 다른 이름으로 저장(저장이랑 비슷함)
+		// 다른 이름으로 저장(저장이랑 비슷함)
 		public void SaveName(TestGUI frame, JFileChooser fileChooser) {
 			if(fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION){
 				this.nodeList = frame.nodeList;
@@ -155,98 +155,96 @@ public class Func extends JFrame{
 					}	
 				}
 
-					list.put("Components", jarr);
-					//System.out.println(list); 잘 저장되는지 확인하기 위해서 넣은거얌
+				list.put("Components", jarr);
+				//System.out.println(list); 잘 저장되는지 확인하기 위해서 넣은거얌
 
-					try {
-						// file에 쓰는 작업
-						String path = fileChooser.getSelectedFile().getPath();
-						FileWriter filewriter = new FileWriter(path); 
-						filewriter.write(list.toJSONString());
-						filewriter.flush();
-						filewriter.close();
-					}
-					catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-
-			// java 파일 생성(워드패드로 확인해보면 형식 잘맞춘듯? 약간 뿌듯
-			public void JavaMake(TestGUI frame, JFileChooser fileChooser) {
 				try {
-					File file = new File("MakeGUI.java");
-					FileWriter fileWriter = new FileWriter(file); 
-					fileWriter.write("import javax.swing.*;\n");
-					fileWriter.write("public class MakeGUI extends JFrame{\n");
-					fileWriter.write("private static final long serialVersionUID = 1L;\n");
-					fileWriter.write("public static void main (String[] args) {\n");
-					fileWriter.write("MakeGUI gui = new MakeGUI();\n");
-					fileWriter.write("\n");
-					fileWriter.write("}\n");
-
-					fileWriter.write("public MakeGUI() {\n");
-					fileWriter.write("JFrame frame = new JFrame();\n");
-					fileWriter.write("frame.setLayout(null);\n");
-
-					for (int i = 0; i < frame.nodeList.getSize(); i++) {
-						// component의 이름이 null이면 저장 안하고 오류메세지 띄움(try catch 문으로 하고싶었는데 못함)
-						if (frame.nodeList.get(i).name !=null) {
-							switch(frame.nodeList.get(i).compType) {
-							case 1 : // button
-								fileWriter.write("JButton " + frame.nodeList.get(i).name + " = new JButton(\"" + frame.nodeList.get(i).compTextAttr + "\");\n");
-								fileWriter.write(frame.nodeList.get(i).name + ".setSize(" + frame.nodeList.get(i).xLength + "," + frame.nodeList.get(i).yLength + ");\n");
-								fileWriter.write(frame.nodeList.get(i).name + ".setLocation(" + frame.nodeList.get(i).startX + "," + frame.nodeList.get(i).startY + ");\n");
-								fileWriter.write(frame.nodeList.get(i).name + ".getBackground("
-										+ frame.nodeList.get(i).compColor.getRed() + "," + frame.nodeList.get(i).compColor.getGreen()+ ","
-										+ frame.nodeList.get(i).compColor.getBlue() + ");\n");
-								fileWriter.flush();
-								break;
-							case 2 : // label
-								fileWriter.write("JLable " + frame.nodeList.get(i).name + " = new JLable(\"" + frame.nodeList.get(i).compTextAttr + "\");\n");
-								fileWriter.write(frame.nodeList.get(i).name + ".setSize(" + frame.nodeList.get(i).xLength + "," + frame.nodeList.get(i).yLength + ");\n");
-								fileWriter.write(frame.nodeList.get(i).name + ".setLocation(" + frame.nodeList.get(i).startX + "," + frame.nodeList.get(i).startY + ");\n");
-								fileWriter.write(frame.nodeList.get(i).name + ".getBackground("
-										+ frame.nodeList.get(i).compColor.getRed() + "," + frame.nodeList.get(i).compColor.getGreen()+ ","
-										+ frame.nodeList.get(i).compColor.getBlue() + ");\n");
-								fileWriter.flush();
-								break;
-
-							case 3 : // text box
-								fileWriter.write("JTextBox " + frame.nodeList.get(i).name + " = new JTextBox(\"" + frame.nodeList.get(i).compTextAttr + "\");\n");
-								fileWriter.write(frame.nodeList.get(i).name + ".setSize(" + frame.nodeList.get(i).xLength + "," + frame.nodeList.get(i).yLength + ");\n");
-								fileWriter.write(frame.nodeList.get(i).name + ".setLocation(" + frame.nodeList.get(i).startX + "," + frame.nodeList.get(i).startY + ");\n");
-								fileWriter.write(frame.nodeList.get(i).name + ".getBackground("
-										+ frame.nodeList.get(i).compColor.getRed() + "," + frame.nodeList.get(i).compColor.getGreen()+ ","
-										+ frame.nodeList.get(i).compColor.getBlue() + ");\n");
-								fileWriter.flush();
-								break;
-							default : 
-								break;
-							}
-						}
-						// component의 이름이 null일 경우
-						else {
-							JOptionPane.showMessageDialog(null, "There is some components named 'null'");
-							return;
-						}
-					}
-
-					fileWriter.write("frame.setSize(980, 640);\n");
-					fileWriter.write("frame.setDefaultCloseOperation(EXIT_ON_CLOSE);\n");
-					fileWriter.write("frame.setVisible(true);\n");
-
-					for (int i = 0; i < frame.nodeList.getSize(); i++)
-						fileWriter.write("frame.add(" + frame.nodeList.get(i).name + ");\n");
-					fileWriter.write("}\n");
-					fileWriter.write("}\n");
-
-					fileWriter.flush();
-					fileWriter.close();
+					// file에 쓰는 작업
+					String path = fileChooser.getSelectedFile().getPath();
+					FileWriter filewriter = new FileWriter(path); 
+					filewriter.write(list.toJSONString());
+					filewriter.flush();
+					filewriter.close();
 				}
-				catch (IOException e){
+				catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 		}
+
+		// java 파일 생성(워드패드로 확인해보면 형식 잘맞춘듯? 약간 뿌듯
+		public void JavaMake(TestGUI frame, JFileChooser fileChooser) {
+			try {
+				File file = new File("MakeGUI.java");
+				FileWriter fileWriter = new FileWriter(file); 
+				fileWriter.write("import javax.swing.*;\n");
+				fileWriter.write("import java.awt.*;\n");
+				fileWriter.write("public class MakeGUI extends JFrame{\n");
+				fileWriter.write("private static final long serialVersionUID = 1L;\n");
+				fileWriter.write("public static void main (String[] args) {\n");
+				fileWriter.write("MakeGUI gui = new MakeGUI();\n");
+				fileWriter.write("\n");
+				fileWriter.write("}\n");
+
+				fileWriter.write("public MakeGUI() {\n");
+				fileWriter.write("JFrame frame = new JFrame();\n");
+				fileWriter.write("frame.setLayout(null);\n");
+
+				for (int i = 0; i < frame.nodeList.getSize(); i++) {
+					// component의 이름이 null이면 저장 안하고 오류메세지 띄움(try catch 문으로 하고싶었는데 못함)
+					if (frame.nodeList.get(i).name !=null) {
+						switch(frame.nodeList.get(i).compType) {
+						case 1 : // button
+							fileWriter.write("JButton " + frame.nodeList.get(i).name + " = new JButton(\"" + frame.nodeList.get(i).compTextAttr + "\");\n");
+							fileWriter.write(frame.nodeList.get(i).name + ".setSize(" + frame.nodeList.get(i).xLength + "," + frame.nodeList.get(i).yLength + ");\n");
+							fileWriter.write(frame.nodeList.get(i).name + ".setLocation(" + frame.nodeList.get(i).startX + "," + frame.nodeList.get(i).startY + ");\n");
+							fileWriter.write("Color colorB = new Color("+ frame.nodeList.get(i).compColor.getRed() + ", "
+									+ frame.nodeList.get(i).compColor.getGreen() + ", " + frame.nodeList.get(i).compColor.getBlue() + ");\n");
+							fileWriter.write(frame.nodeList.get(i).name + ".setBackground(colorB);\n");
+							fileWriter.flush();
+							break;
+						case 2 : // label
+							fileWriter.write("JLabel " + frame.nodeList.get(i).name + " = new JLabel(\"" + frame.nodeList.get(i).compTextAttr + "\");\n");
+							fileWriter.write(frame.nodeList.get(i).name + ".setSize(" + frame.nodeList.get(i).xLength + "," + frame.nodeList.get(i).yLength + ");\n");
+							fileWriter.write(frame.nodeList.get(i).name + ".setLocation(" + frame.nodeList.get(i).startX + "," + frame.nodeList.get(i).startY + ");\n");
+							fileWriter.flush();
+							break;
+
+						case 3 : // text Filed
+							fileWriter.write("JTextField " + frame.nodeList.get(i).name + " = new JTextField(\"" + frame.nodeList.get(i).compTextAttr + "\");\n");
+							fileWriter.write(frame.nodeList.get(i).name + ".setSize(" + frame.nodeList.get(i).xLength + "," + frame.nodeList.get(i).yLength + ");\n");
+							fileWriter.write(frame.nodeList.get(i).name + ".setLocation(" + frame.nodeList.get(i).startX + "," + frame.nodeList.get(i).startY + ");\n");
+							fileWriter.write("Color colorT = new Color("+ frame.nodeList.get(i).compColor.getRed() + ", "
+									+ frame.nodeList.get(i).compColor.getGreen() + ", " + frame.nodeList.get(i).compColor.getBlue() + ");\n");
+							fileWriter.write(frame.nodeList.get(i).name + ".setBackground(colorT);\n");
+							fileWriter.flush();
+							break;
+						default : 
+							break;
+						}
+					}
+					// component의 이름이 null일 경우
+					else {
+						JOptionPane.showMessageDialog(null, "There is some components named 'null'");
+						return;
+					}
+				}
+
+				fileWriter.write("frame.setSize(980, 640);\n");
+				fileWriter.write("frame.setDefaultCloseOperation(EXIT_ON_CLOSE);\n");
+				fileWriter.write("frame.setVisible(true);\n");
+
+				for (int i = 0; i < frame.nodeList.getSize(); i++)
+					fileWriter.write("frame.add(" + frame.nodeList.get(i).name + ");\n");
+				fileWriter.write("}\n");
+				fileWriter.write("}\n");
+
+				fileWriter.flush();
+				fileWriter.close();
+			}
+			catch (IOException e){
+				e.printStackTrace();
+			}
+		}
 	}
+}
