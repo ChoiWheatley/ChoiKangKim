@@ -1,4 +1,4 @@
-package swing;
+package testGUI;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -19,6 +19,8 @@ import java.awt.event.MouseListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.sun.xml.internal.ws.api.Component;
@@ -33,12 +35,19 @@ import javax.swing.JDesktopPane;
 import javax.swing.JTextPane;
 import javax.swing.JTextArea;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseMotionListener;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.Vector;
 
 import javax.swing.JScrollBar;
@@ -52,11 +61,12 @@ import javax.swing.JComponent;
 import javax.swing.DefaultComboBoxModel;
 
 public class TestGUI extends JFrame {
-	private ComponentStruct nodeList = null;
+	public ComponentStruct nodeList = null;
 	private DefaultMutableTreeNode whatNode = null;
 	private Object nodeInfo = null;
 	private boolean addComponentMode = false;
 	private boolean highlight = false;
+	private boolean block = true;
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -71,7 +81,7 @@ public class TestGUI extends JFrame {
 	private JTextField bValue;
 	private JTextField compTextAttrValue;
 
-	private JComboBox compTypeValue;
+	private JComboBox<String> compTypeValue;
 
 	private CompNode topNode;
 
@@ -82,6 +92,7 @@ public class TestGUI extends JFrame {
 					TestGUI frame = new TestGUI();
 					CreateMenuBar menubar = new CreateMenuBar(frame);
 					CreateToolBar toolbar = new CreateToolBar(frame);
+					frame.setName("GUI Builder");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -157,12 +168,6 @@ public class TestGUI extends JFrame {
 					setCursor(Cursor.DEFAULT_CURSOR);
 				}
 				// 활성화시 컴포넌트 제거명령
-				if (e.getKeyCode() == KeyEvent.VK_DELETE) {
-					nodeList.sub(nodeList.getSize() - 1);
-					highlight = false;
-					repaint();
-					System.out.println("current size : " + nodeList.getSize());
-				}
 			}
 		});
 		splitPane_1.setLeftComponent(tree);
@@ -187,8 +192,9 @@ public class TestGUI extends JFrame {
 
 		startXValue = new JTextField();
 		textStartX.add(startXValue);
-		startXValue.setText("x");
+		startXValue.setText("X");
 		startXValue.setColumns(10);
+		startXValue.addActionListener(new AttrListener(startXValue, AttrListener.ATTR_STARTX));
 
 		JPanel startYPane = new JPanel();
 		startYPane.setBackground(new Color(127, 255, 212));
@@ -205,9 +211,10 @@ public class TestGUI extends JFrame {
 		textStartY.setLayout(new GridLayout(1, 2));
 
 		startYValue = new JTextField();
-		startYValue.setText("x");
+		startYValue.setText("Y");
 		startYValue.setColumns(10);
 		textStartY.add(startYValue);
+		startYValue.addActionListener(new AttrListener(startYValue, AttrListener.ATTR_STARTY));
 
 		JPanel xLengthPane = new JPanel();
 		xLengthPane.setBackground(new Color(224, 255, 255));
@@ -220,6 +227,8 @@ public class TestGUI extends JFrame {
 		xLengthValue = new JTextField();
 		xLengthPane.add(xLengthValue);
 		xLengthValue.setColumns(1);
+		xLengthValue.setText("xLength");
+		xLengthValue.addActionListener(new AttrListener(xLengthValue, AttrListener.ATTR_XLENGTH));
 
 		JPanel yLengthPane = new JPanel();
 		yLengthPane.setBackground(new Color(127, 255, 212));
@@ -231,8 +240,9 @@ public class TestGUI extends JFrame {
 
 		yLengthValue = new JTextField();
 		yLengthPane.add(yLengthValue);
-		yLengthValue.setText("x");
+		yLengthValue.setText("yLength");
 		yLengthValue.setColumns(10);
+		yLengthValue.addActionListener(new AttrListener(yLengthValue, AttrListener.ATTR_YLENGTH));
 
 		JPanel compTypePane = new JPanel();
 		compTypePane.setBackground(new Color(224, 255, 255));
@@ -243,11 +253,19 @@ public class TestGUI extends JFrame {
 		compType.setBackground(new Color(127, 255, 212));
 		compTypePane.add(compType);
 
-		compTypeValue = new JComboBox();
+		compTypeValue = new JComboBox<String>();
 		compTypeValue.setBackground(new Color(248, 248, 255));
-		compTypeValue.setModel(new DefaultComboBoxModel(
+		compTypeValue.setModel(new DefaultComboBoxModel<String>(
 				new String[] { "COMP_BUTTON", "COMP_CHECK_BOX", "COMP_LABEL", "COMP_TEXT_BOX", "COMP_COMBO_BOX" }));
 		compTypePane.add(compTypeValue);
+		compTypeValue.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				System.out.println("index : " + compTypeValue.getSelectedIndex());
+				if (block && topNode != null) {
+					topNode.compType = compTypeValue.getSelectedIndex() + 1;
+				}
+			}
+		});
 
 		JPanel namePane = new JPanel();
 		namePane.setBackground(new Color(127, 255, 212));
@@ -258,10 +276,11 @@ public class TestGUI extends JFrame {
 		namePane.add(name);
 
 		nameValue = new JTextField();
-		nameValue.setText("x");
+		nameValue.setText("var_name");
 		nameValue.setColumns(10);
 		namePane.add(nameValue);
-                  
+		nameValue.addActionListener(new AttrListener(nameValue, AttrListener.ATTR_NAME));
+
 		JPanel compColorPane = new JPanel();
 		compColorPane.setBackground(new Color(224, 255, 255));
 		AttributePane.add(compColorPane);
@@ -274,16 +293,19 @@ public class TestGUI extends JFrame {
 		rValue.setText("r");
 		rValue.setColumns(10);
 		compColorPane.add(rValue);
+		rValue.addActionListener(new AttrListener(rValue, AttrListener.ATTR_R));
 
 		gValue = new JTextField();
 		gValue.setText("g");
 		compColorPane.add(gValue);
 		gValue.setColumns(10);
+		gValue.addActionListener(new AttrListener(gValue, AttrListener.ATTR_G));
 
 		bValue = new JTextField();
 		bValue.setText("b");
 		compColorPane.add(bValue);
 		bValue.setColumns(10);
+		bValue.addActionListener(new AttrListener(bValue, AttrListener.ATTR_B));
 
 		JPanel compTextAttributePane = new JPanel();
 		compTextAttributePane.setBackground(new Color(127, 255, 212));
@@ -296,6 +318,7 @@ public class TestGUI extends JFrame {
 		compTextAttrValue = new JTextField();
 		compTextAttributePane.add(compTextAttrValue);
 		compTextAttrValue.setColumns(10);
+		compTextAttrValue.addActionListener(new AttrListener(compTextAttrValue, AttrListener.ATTR_TEXT));
 
 		/*
 		 * 에디터 패인은 addComponentMode가 true일 때에만 마우스 드래그를 허용, 드래그시 rectangular 가
@@ -305,6 +328,16 @@ public class TestGUI extends JFrame {
 		EditPane editPane = new EditPane();
 		editPane.setBorder(BorderFactory.createTitledBorder("Edit Pane"));
 		splitPane.setRightComponent(editPane);
+		editPane.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+					nodeList.sub(nodeList.getSize() - 1);
+					highlight = false;
+					repaint();
+					System.out.println("current size : " + nodeList.getSize());
+				}
+			}
+		});
 
 		editPane.setLayout(null);
 		JScrollBar scrollBar = new JScrollBar();
@@ -386,11 +419,13 @@ public class TestGUI extends JFrame {
 			int tempLengthX, tempLengthY;
 			int top = -1;
 			int offX, offY;
-			int offL,offW;
-            int topX,topY;
-            int JS=0;
-            int gX,gY;
+			int offL, offW;
+			// int topX, topY;
+			int JS = 0;
+			int gX, gY;
+
 			public void mousePressed(MouseEvent e) {
+				requestFocus();
 				if (addComponentMode) {
 					startPoint = e.getPoint();
 				} else {
@@ -400,7 +435,7 @@ public class TestGUI extends JFrame {
 					 * contains(int x, int y, int width, int height) 메소드 를 사용하여
 					 * 클릭여부를 확인한다.
 					 */
-				JS = 0;
+					JS = 0;
 					if (nodeList.getSize() != 0) {
 						top = -1;
 						for (int i = 0; i < nodeList.getSize(); i++) {
@@ -419,36 +454,38 @@ public class TestGUI extends JFrame {
 							// node which contains mouse axis
 
 						if (top >= 0) {
-							
+
 							CompNode topNode = nodeList.get(top);
 							offX = e.getX() - topNode.startX;
 							offY = e.getY() - topNode.startY;
-							
+
 							/*
 							 * 그리고, 드래그된 컴포넌트는 노드의 제일 앞으로 오게 설정하고 싶다.
 							 */
-						
+
 							nodeList.moveToLast(top);
 							top = nodeList.getSize() - 1;
 							highlight = true;
-						//	System.out.println(topNode.startX +" "+ tempStartX);
+							// System.out.println(topNode.startX +" "+
+							// tempStartX);
 							int a = topNode.startX + topNode.xLength;
 							int b = topNode.startY + topNode.yLength;
-							if(e.getX()<a && e.getX()>a-7 && e.getY()<b && e.getY()>b-7){
+							if (e.getX() < a && e.getX() > a - 7 && e.getY() < b && e.getY() > b - 7) {
 								JS = 1;
-								gX = e.getX(); gY = e.getY();
+								gX = e.getX();
+								gY = e.getY();
 								offL = topNode.xLength;
 								offW = topNode.yLength;
 							}
-                            
+
 							/*
 							 * 클릭했을 때 Attribute Pane에 관련 정보가 뜨도록 만들어주자.
 							 */
-							
-							 setAttributePane(topNode);
-							
+
+							setAttributePane(topNode);
+
 						} else {
-							//highlight = false;
+							// highlight = false;
 						}
 					} // end of if, when nodeList's size is not zero
 					repaint();
@@ -458,27 +495,26 @@ public class TestGUI extends JFrame {
 			public void mouseDragged(MouseEvent e) {
 				if (addComponentMode) {
 					lastPoint = e.getPoint();
-					//highlight = false;
+					// highlight = false;
 				} else {
 					/*
 					 * 만약에 top(현재 클릭한 컴포넌트 중 가장 높이 있는놈) 가 0이상, 즉 마우스가 클릭이 된 상태에서
 					 * 잡힌 컴포넌트가 있다면 드래그시 따라 움직이도록 만들어야 한다.
 					 */
-					
+
 					if (top >= 0) {
-                       // topX = e.getX(); topY = e.getY();                
-					if(JS == 1) {
-						
-						CompNode topNode = nodeList.get(top);
-						
-						topNode.xLength = offL+e.getX()-gX;
-						topNode.yLength = offW+e.getY()-gY;
-						//setAttributePane(increseNode);
-						}
-					else{
-						CompNode topNode = nodeList.get(top);
-						topNode.startX = e.getX() - offX;
-						topNode.startY = e.getY() - offY;
+						// topX = e.getX(); topY = e.getY();
+						if (JS == 1) {
+
+							CompNode topNode = nodeList.get(top);
+
+							topNode.xLength = offL + e.getX() - gX;
+							topNode.yLength = offW + e.getY() - gY;
+							// setAttributePane(increseNode);
+						} else {
+							CompNode topNode = nodeList.get(top);
+							topNode.startX = e.getX() - offX;
+							topNode.startY = e.getY() - offY;
 						}
 						setAttributePane(topNode);
 					}
@@ -488,6 +524,7 @@ public class TestGUI extends JFrame {
 
 			@SuppressWarnings("deprecation")
 			public void mouseReleased(MouseEvent e) {
+				highlight = false;
 				Random colorRandom = new Random();
 				Color randColor = new Color(colorRandom.nextInt(255), colorRandom.nextInt(255),
 						colorRandom.nextInt(255));
@@ -500,7 +537,7 @@ public class TestGUI extends JFrame {
 					} else {
 						lastPoint = e.getPoint();
 					}
-				
+
 					TestGUI.super.setCursor(Cursor.DEFAULT_CURSOR);
 					repaint();
 
@@ -538,13 +575,10 @@ public class TestGUI extends JFrame {
 
 					// Linked List에다가 집어넣기
 					nodeList.add(newNode);
-			}
+				} // end of addComponentMode checking
 
-					// 이제 다시 addComponentMode를 원래대로 돌려놓고 마우스를 default 모양으로 바꿔야지
-					addComponentMode = false;
-				 // end of addComponentMode checking
-
-				highlight = false;
+				// 이제 다시 addComponentMode를 원래대로 돌려놓고 마우스를 default 모양으로 바꿔야지
+				addComponentMode = false;
 
 				top = -1;
 				// startPoint, lastPoint 초기화
@@ -553,18 +587,124 @@ public class TestGUI extends JFrame {
 
 			} // end of mouseReleased method
 
+			// 모서리에 닿으면 커서 바꾸기
 			public void mouseMoved(MouseEvent e) {
+				if (nodeList.getSize() > 0) {
+					CompNode topNode = nodeList.get(nodeList.getSize() - 1);
+					int a = topNode.startX + topNode.xLength;
+					int b = topNode.startY + topNode.yLength;
+					if (e.getX() < a && e.getX() > a - 7 && e.getY() < b && e.getY() > b - 7) {
+						TestGUI.super.setCursor(Cursor.NW_RESIZE_CURSOR);
+					} else if (addComponentMode) {
+						TestGUI.super.setCursor(Cursor.CROSSHAIR_CURSOR);
+					} else {
+						TestGUI.super.setCursor(Cursor.DEFAULT_CURSOR);
+					}
+				}
 			}
 
 			public void mouseClicked(MouseEvent e) {
 			}
 
 			public void mouseEntered(MouseEvent e) {
+				// block은 콤보박스에서 선택을 하지 않는 경우 false로 막아놓는다.
+				block = false;
+				System.out.println("in");
 			}
 
 			public void mouseExited(MouseEvent e) {
+				block = true;
+				System.out.println("out");
 			}
 		} // end of inner class MouseHandler
 
 	} // end of Class EditPane
+
+	private class AttrListener implements ActionListener {
+		public static final int ATTR_STARTX = 0;
+		public static final int ATTR_STARTY = 1;
+		public static final int ATTR_XLENGTH = 2;
+		public static final int ATTR_YLENGTH = 3;
+		public static final int ATTR_NAME = 4;
+		public static final int ATTR_TEXT = 5;
+		public static final int ATTR_TYPE = 6;
+		public static final int ATTR_R = 7;
+		public static final int ATTR_G = 8;
+		public static final int ATTR_B = 9;
+
+		JTextField txtField;
+		int offset;
+		String text;
+
+		public AttrListener(JTextField field, int offset) {
+			this.txtField = field;
+			this.offset = offset;
+		}
+
+		private boolean isNumber(String input) {
+			boolean parseable = true;
+			int number;
+			try {
+				number = Integer.parseInt(input);
+				System.out.println("numb : " + number);
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, "숫자가 아니자나");
+				parseable = false;
+			}
+			return parseable;
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			int colorR = topNode.compColor.getRed(), colorG = topNode.compColor.getGreen(),
+					colorB = topNode.compColor.getBlue();
+			text = e.getActionCommand();
+			System.out.println(text);
+			if (nodeList.getSize() > 0) {
+				switch (offset) {
+				// NUMBER
+				case ATTR_STARTX:
+					if (isNumber(text))
+						topNode.startX = Integer.parseInt(text);
+					break;
+				case ATTR_STARTY:
+					if (isNumber(text))
+						topNode.startY = Integer.parseInt(text);
+					break;
+				case ATTR_XLENGTH:
+					if (isNumber(text))
+						topNode.xLength = Integer.parseInt(text);
+					break;
+				case ATTR_YLENGTH:
+					if (isNumber(text))
+						topNode.yLength = Integer.parseInt(text);
+					break;
+				case ATTR_R:
+					if (isNumber(text))
+						colorR = Integer.parseInt(text);
+					break;
+				case ATTR_G:
+					if (isNumber(text))
+						colorG = Integer.parseInt(text);
+					break;
+				case ATTR_B:
+					if (isNumber(text))
+						colorB = Integer.parseInt(text);
+					break;
+
+				// TEXT
+				case ATTR_TEXT:
+					topNode.compTextAttr = text;
+					break;
+				case ATTR_NAME:
+					topNode.name = text;
+					break;
+				}// end of switch
+
+				// 아직 Color 안집어넣음
+				topNode.compColor = new Color(colorR, colorG, colorB);
+			}
+			repaint();
+		} // end of actionPerformed
+	}
+
 } // end of public class TestGUI
