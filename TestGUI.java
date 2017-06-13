@@ -116,7 +116,7 @@ public class TestGUI extends JFrame {
 
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setContinuousLayout(true);
-		splitPane.setDividerLocation(100);
+		// splitPane.setDividerLocation(80);
 		contentPane.add(splitPane, BorderLayout.CENTER);
 
 		JSplitPane splitPane_1 = new JSplitPane();
@@ -255,8 +255,8 @@ public class TestGUI extends JFrame {
 
 		compTypeValue = new JComboBox<String>();
 		compTypeValue.setBackground(new Color(248, 248, 255));
-		compTypeValue.setModel(new DefaultComboBoxModel<String>(
-				new String[] { "COMP_BUTTON", "COMP_CHECK_BOX", "COMP_LABEL", "COMP_TEXT_BOX", "COMP_COMBO_BOX" }));
+		compTypeValue.setModel(
+				new DefaultComboBoxModel<String>(new String[] { "COMP_BUTTON", "COMP_LABEL", "COMP_TEXT_BOX", }));
 		compTypePane.add(compTypeValue);
 		compTypeValue.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -558,17 +558,11 @@ public class TestGUI extends JFrame {
 					case ("Button"):
 						newNode.compType = ComponentStruct.COMP_BUTTON;
 						break;
-					case ("Check Box"):
-						newNode.compType = ComponentStruct.COMP_CHECK_BOX;
-						break;
 					case ("Label"):
 						newNode.compType = ComponentStruct.COMP_LABEL;
 						break;
 					case ("Text Box"):
 						newNode.compType = ComponentStruct.COMP_TEXT_BOX;
-						break;
-					case ("Combo Box"):
-						newNode.compType = ComponentStruct.COMP_COMBO_BOX;
 						break;
 
 					} // end of switch

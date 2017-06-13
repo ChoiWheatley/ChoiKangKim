@@ -16,18 +16,14 @@ public class MyJTree extends JTree {
 
 		DefaultMutableTreeNode userInterface = new DefaultMutableTreeNode("User Interface");
 		DefaultMutableTreeNode button = new DefaultMutableTreeNode("Button");
-		DefaultMutableTreeNode checkBox = new DefaultMutableTreeNode("Check Box");
 		DefaultMutableTreeNode label = new DefaultMutableTreeNode("Label");
 		DefaultMutableTreeNode textBox = new DefaultMutableTreeNode("Text Box");
-		DefaultMutableTreeNode comboBox = new DefaultMutableTreeNode("Combo Box");
 
 		Palete.add(userInterface);
 
 		userInterface.add(button);
-		userInterface.add(checkBox);
 		userInterface.add(label);
 		userInterface.add(textBox);
-		userInterface.add(comboBox);
 		
 		tree = new JTree(Palete);
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.CONTIGUOUS_TREE_SELECTION);

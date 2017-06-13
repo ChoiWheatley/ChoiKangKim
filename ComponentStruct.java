@@ -16,10 +16,8 @@ import java.util.Vector;
 public class ComponentStruct {
 	// Constants
 	public final static int COMP_BUTTON = 1;
-	public final static int COMP_CHECK_BOX = 2;
-	public final static int COMP_LABEL = 3;
-	public final static int COMP_TEXT_BOX = 4;
-	public final static int COMP_COMBO_BOX = 5;
+	public final static int COMP_LABEL = 2;
+	public final static int COMP_TEXT_BOX = 3;
 
 	private CompNode head;
 	private CompNode tail;
@@ -65,11 +63,14 @@ public class ComponentStruct {
 			return false;
 		}
 
-		if (index != 0) {
+		if (index > 0) {
 			CompNode prevCompNode = this.get(index - 1);
 			CompNode tempCompNode = this.get(index);
 
 			prevCompNode.link = tempCompNode.link;
+			if (index == size - 1) {
+				tail = prevCompNode;
+			}
 			tempCompNode = null; // 이제 참조할 수 있는 수단이 없으므로 JVM이 알아서 처리해주겠지?
 
 		} else {
